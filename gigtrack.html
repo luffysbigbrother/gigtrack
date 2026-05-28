@@ -1,0 +1,3746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- ── Viewport: prevent zoom restore on iOS reopen ── -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- ── PWA: standalone install ── -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GigTrack">
+<meta name="application-name" content="GigTrack">
+<meta name="theme-color" content="#050508">
+<meta name="msapplication-TileColor" content="#050508">
+<meta name="msapplication-navbutton-color" content="#050508">
+
+<!-- ── SEO / description ── -->
+<meta name="description" content="GigTrack — Gig worker financial OS. Track earnings, expenses, mileage and taxes across all delivery platforms.">
+
+<title>GigTrack — Gig Worker Financial OS</title>
+
+<!-- ── PWA Manifest ── -->
+<link rel="manifest" href="manifest.json">
+
+<!-- ── Apple touch icons (generated inline via SVG) ── -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<!-- ── Fonts ── -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM v3 — Precision Financial Tool
+   Space Grotesk: confident, technical, modern
+   Inter: readable, neutral, trustworthy  
+   Space Mono: numbers and data, monospaced precision
+   
+   Palette: True black → deep navy base
+            Electric lime: earnings, positive, action
+            Amber: warnings, deductions
+            Rose: tax owed, danger
+            Slate blues: data, neutral info
+   
+   Philosophy: Rams' "less but better"
+   Every element earns its place. No decoration.
+   ═══════════════════════════════════════════════════════ */
+:root {
+  /* Surfaces — true depth hierarchy */
+  --bg:        #050508;
+  --bg1:       #0c0c12;
+  --bg2:       #12121a;
+  --bg3:       #1a1a26;
+  --bg4:       #222232;
+
+  /* Borders — precise, not decorative */
+  --border:    rgba(255,255,255,0.06);
+  --border2:   rgba(255,255,255,0.10);
+  --border3:   rgba(255,255,255,0.16);
+
+  /* Brand — electric lime, uncompromising */
+  --lime:      #b8ff00;
+  --lime-dim:  rgba(184,255,0,0.10);
+  --lime-glow: 0 0 24px rgba(184,255,0,0.18);
+
+  /* Semantic colors */
+  --amber:     #f5a623;
+  --amber-dim: rgba(245,166,35,0.10);
+  --rose:      #ff3d5a;
+  --rose-dim:  rgba(255,61,90,0.10);
+  --sky:       #2dd4bf;
+  --sky-dim:   rgba(45,212,191,0.10);
+  --violet:    #818cf8;
+  --violet-dim:rgba(129,140,248,0.10);
+
+  /* Text */
+  --text:      #eeeef5;
+  --text2:     #8888aa;
+  --text3:     #44445a;
+
+  /* Radii — more refined, less rounded */
+  --r-xs:  6px;
+  --r-sm:  10px;
+  --r:     14px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+
+  /* Spacing rhythm */
+  --gap:   16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Single, precise grid — no noise, no glow competing with data */
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    repeating-linear-gradient(0deg,   transparent, transparent 47px, rgba(255,255,255,0.022) 47px, rgba(255,255,255,0.022) 48px),
+    repeating-linear-gradient(90deg,  transparent, transparent 47px, rgba(255,255,255,0.022) 47px, rgba(255,255,255,0.022) 48px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════ */
+header {
+  position: sticky; top: 0; z-index: 200;
+  height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 max(20px, env(safe-area-inset-right));
+  padding-left: max(20px, env(safe-area-inset-left));
+  background: rgba(5,5,8,0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.logo em { color: var(--lime); font-style: normal; }
+
+.header-right { display:flex; align-items:center; gap:8px; }
+
+/* Tax year toggle — compact, unobtrusive */
+.ty-toggle {
+  display: flex; gap: 2px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  padding: 3px;
+}
+.ty-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+  padding: 3px 9px; border-radius: 6px;
+  transition: all 0.12s;
+}
+.ty-btn.active  { background: var(--lime); color: #050508; }
+.ty-btn:not(.active):hover { color: var(--text2); }
+
+/* Header pills */
+.pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; font-weight: 700;
+  padding: 3px 9px; border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.pill-lime  { background: var(--lime-dim);  color: var(--lime);  border: 1px solid rgba(184,255,0,0.18); }
+.pill-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
+
+/* ═══════════════════════════════════════════════════════
+   NAV — 5 items, bottom tab-bar style on mobile
+   ═══════════════════════════════════════════════════════ */
+nav {
+  position: sticky; top: 54px; z-index: 190;
+  display: flex;
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  flex: 1;
+  background: none; border: none;
+  color: var(--text3);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 600;
+  padding: 13px 12px 11px;
+  cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  min-width: 64px;
+}
+.nav-btn:hover  { color: var(--text2); }
+.nav-btn.active { color: var(--lime); border-bottom-color: var(--lime); }
+
+.nav-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN & TABS
+   ═══════════════════════════════════════════════════════ */
+main {
+  position: relative; z-index: 1;
+  max-width: 720px; margin: 0 auto;
+  /* env() safe-area for iPhone notch / Dynamic Island / home indicator */
+  padding: 20px 16px calc(120px + env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+
+.tab { display: none; }
+.tab.active { display: block; animation: tabIn 0.2s ease both; }
+@keyframes tabIn {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARDS — Rams: as little as possible
+   ═══════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Accent left border variant — used for emphasis, not every card */
+.card-accent-lime   { border-left: 3px solid var(--lime); }
+.card-accent-amber  { border-left: 3px solid var(--amber); }
+.card-accent-rose   { border-left: 3px solid var(--rose); }
+
+.card-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD — Today hero first, year stats below
+   ═══════════════════════════════════════════════════════ */
+
+/* Hero today card */
+.today-hero {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 24px 20px 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.today-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--lime), transparent 60%);
+}
+
+.today-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.14em;
+  color: var(--text3); text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.today-earned {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 3.2rem; font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--lime);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.today-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem; color: var(--text3);
+  margin-bottom: 16px;
+}
+
+/* Goal progress inside hero */
+.goal-bar-wrap { margin-bottom: 12px; }
+.goal-bar-track {
+  height: 4px; background: var(--bg3);
+  border-radius: 2px; overflow: hidden;
+}
+.goal-bar-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--lime);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.goal-bar-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 5px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; color: var(--text3);
+}
+.goal-bar-labels span:first-child { color: var(--text2); }
+
+.today-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.today-stat {
+  flex: 1; min-width: 80px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+.today-stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3);
+  margin-bottom: 3px;
+}
+.today-stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--text);
+}
+.today-stat-val.lime   { color: var(--lime); }
+.today-stat-val.amber  { color: var(--amber); }
+.today-stat-val.rose   { color: var(--rose); }
+
+/* Goal input — minimal, inline */
+.goal-edit {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 12px;
+}
+.goal-edit-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.today-hero .goal-edit input {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-xs);
+  color: var(--lime);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  padding: 5px 10px;
+  width: 90px;
+  box-shadow: none;
+}
+.today-hero .goal-edit input:focus {
+  border-color: rgba(184,255,0,0.4);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184,255,0,0.07);
+}
+
+/* Year stats grid — secondary, below hero */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+@media(max-width:480px) {
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+}
+
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 12px;
+  position: relative;
+  overflow: hidden;
+}
+/* Left accent bar — status indicator, not decoration */
+.stat-card::before {
+  content:''; position:absolute;
+  top:0; left:0; bottom:0; width:2px;
+}
+.stat-card.lime::before   { background: var(--lime); }
+.stat-card.amber::before  { background: var(--amber); }
+.stat-card.rose::before   { background: var(--rose); }
+.stat-card.sky::before    { background: var(--sky); }
+.stat-card.violet::before { background: var(--violet); }
+
+.stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3);
+  margin-bottom: 6px;
+}
+.stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1;
+}
+.stat-value.lime   { color: var(--lime); }
+.stat-value.amber  { color: var(--amber); }
+.stat-value.rose   { color: var(--rose); }
+.stat-value.sky    { color: var(--sky); }
+.stat-value.violet { color: var(--violet); }
+.stat-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem; color: var(--text3);
+  margin-top: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHART
+   ═══════════════════════════════════════════════════════ */
+.chart-wrap { position:relative; width:100%; }
+
+/* ═══════════════════════════════════════════════════════
+   INSIGHTS — signal, not noise
+   ═══════════════════════════════════════════════════════ */
+.insight {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+  border-left: 2px solid;
+}
+.insight.lime   { background: rgba(184,255,0,0.04);   border-color: var(--lime); }
+.insight.amber  { background: rgba(245,166,35,0.05);  border-color: var(--amber); }
+.insight.sky    { background: rgba(45,212,191,0.04);  border-color: var(--sky); }
+.insight.rose   { background: rgba(255,61,90,0.05);   border-color: var(--rose); }
+.insight-icon   { font-size: 1rem; flex-shrink:0; margin-top:1px; }
+.insight-text   { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+.insight-text strong { color: var(--text); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
+   FORMS
+   ═══════════════════════════════════════════════════════ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap: 12px; margin-bottom: 16px;
+}
+@media(max-width:480px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.fgroup { display:flex; flex-direction:column; gap:5px; }
+
+.flabel {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3);
+}
+
+input, select, textarea {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem; font-weight: 400;
+  padding: 10px 13px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  width: 100%;
+  -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(184,255,0,0.45);
+  box-shadow: 0 0 0 3px rgba(184,255,0,0.07);
+}
+/* Valid state — subtle positive feedback */
+input:valid:not(:placeholder-shown) { border-color: rgba(184,255,0,0.22); }
+select option { background: var(--bg2); }
+
+/* ═══════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════ */
+.btn {
+  border: none; border-radius: var(--r-sm); cursor: pointer;
+  font-family: 'Inter', sans-serif; font-weight: 600;
+  font-size: 0.82rem;
+  padding: 10px 20px;
+  transition: all 0.12s;
+  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-lime {
+  background: var(--lime); color: #050508;
+}
+.btn-lime:hover  { background: #c8ff1a; box-shadow: var(--lime-glow); transform: translateY(-1px); }
+.btn-lime:active { transform: translateY(0); box-shadow: none; }
+
+.btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { border-color: rgba(184,255,0,0.3); color: var(--lime); }
+
+.btn-rose {
+  background: var(--rose-dim); color: var(--rose);
+  border: 1px solid rgba(255,61,90,0.2);
+  padding: 5px 10px; font-size: 0.7rem;
+}
+.btn-rose:hover { background: rgba(255,61,90,0.18); }
+
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+/* ═══════════════════════════════════════════════════════
+   FLOATING ACTION BUTTON — Quick Drop, always accessible
+   ═══════════════════════════════════════════════════════ */
+.fab {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: max(20px, env(safe-area-inset-right));
+  z-index: 300;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: var(--lime);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 24px rgba(184,255,0,0.3), 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.fab:hover  { transform: scale(1.06); box-shadow: 0 6px 32px rgba(184,255,0,0.4), 0 2px 8px rgba(0,0,0,0.4); }
+.fab:active { transform: scale(0.96); }
+
+/* FAB tooltip */
+.fab-tip {
+  position: fixed;
+  bottom: calc(32px + env(safe-area-inset-bottom));
+  right: max(88px, calc(68px + env(safe-area-inset-right)));
+  z-index: 299;
+  background: var(--bg3); color: var(--text2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.08em;
+  padding: 5px 10px; border-radius: var(--r-xs);
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity 0.2s;
+  border: 1px solid var(--border2);
+}
+.fab:hover + .fab-tip { opacity: 1; }
+
+/* Quick drop sheet — slides up from bottom */
+.qdrop-sheet {
+  position: fixed; inset: 0; z-index: 400;
+  display: flex; align-items: flex-end;
+  pointer-events: none;
+}
+.qdrop-sheet.open { pointer-events: all; }
+
+.qdrop-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.25s;
+}
+.qdrop-sheet.open .qdrop-backdrop { background: rgba(0,0,0,0.65); }
+
+.qdrop-panel-sheet {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px; margin: 0 auto;
+  background: var(--bg1);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  border-top: 1px solid var(--border2);
+  padding: 12px 20px 40px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.qdrop-sheet.open .qdrop-panel-sheet { transform: translateY(0); }
+
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border2); border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.sheet-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sheet-close {
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text2); border-radius: 50%;
+  width: 28px; height: 28px; cursor: pointer;
+  font-size: 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Drop amount display */
+.qdrop-display {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.qdrop-amount-wrap { display: flex; align-items: baseline; gap: 3px; }
+.qdrop-dollar {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem; font-weight: 700; color: var(--text3);
+}
+.qdrop-amount {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.8rem; font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--lime); line-height: 1;
+  min-width: 100px;
+}
+.qdrop-meta { text-align: right; }
+.qdrop-meta-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; color: var(--text3);
+}
+.qdrop-meta-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; color: var(--text2);
+}
+
+.qdrop-options {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 10px;
+}
+.qdrop-options select { font-size: 0.82rem; padding: 9px 12px; }
+
+/* Keypad */
+.keypad {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; margin-bottom: 10px;
+}
+.key {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem; font-weight: 600;
+  color: var(--text);
+  padding: 16px 0; text-align: center;
+  cursor: pointer;
+  transition: background 0.08s, transform 0.08s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.key:active { background: var(--bg3); transform: scale(0.95); }
+.key.key-del { color: var(--rose); font-size: 1rem; }
+.key.key-ok {
+  background: var(--lime); color: #050508;
+  grid-column: span 3;
+  font-size: 0.9rem; font-weight: 700;
+  padding: 14px 0; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.key.key-ok:active { background: #a8e600; }
+
+/* Drop feed */
+.drop-feed {
+  display: flex; flex-direction: column; gap: 5px;
+  margin-top: 12px; max-height: 180px; overflow-y: auto;
+}
+.drop-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 8px 11px;
+  animation: rise 0.15s ease both;
+}
+.drop-num  { font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--text3); min-width:18px; }
+.drop-pay  { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:700; color:var(--lime); flex:1; }
+.drop-info { font-family:'Space Mono',monospace; font-size:0.58rem; color:var(--text3); display:flex; gap:6px; flex-wrap:wrap; }
+.drop-del-btn {
+  background:none; border:none; color:var(--rose);
+  font-size:0.7rem; cursor:pointer; padding:2px;
+  opacity:0.5; transition:opacity 0.12s;
+}
+.drop-del-btn:hover { opacity:1; }
+
+.drop-session-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 12px;
+  background: rgba(184,255,0,0.05);
+  border: 1px solid rgba(184,255,0,0.14);
+  border-radius: var(--r-sm);
+  margin-top: 8px;
+}
+.drop-session-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3);
+}
+.drop-session-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem; font-weight: 700; color: var(--lime);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TRIPS TAB — mode toggle tabs
+   ═══════════════════════════════════════════════════════ */
+.qdrop-mode-toggle {
+  display: flex; gap: 4px; margin-bottom: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 4px;
+}
+.qdrop-mode-btn {
+  flex: 1; padding: 8px 0;
+  border-radius: 7px;
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  border: none; background: transparent; color: var(--text3);
+  cursor: pointer; transition: all 0.12s;
+}
+.qdrop-mode-btn.active {
+  background: var(--bg3); color: var(--lime);
+  box-shadow: inset 0 0 0 1px rgba(184,255,0,0.2);
+}
+.qdrop-panel-tab { display:none; }
+.qdrop-panel-tab.active { display:block; }
+
+/* ═══════════════════════════════════════════════════════
+   TABLE
+   ═══════════════════════════════════════════════════════ */
+.table-wrap { overflow-x: auto; }
+table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+thead { position:sticky; top:0; }
+th {
+  text-align:left; padding:8px 13px;
+  font-family:'Space Mono',monospace; font-size:0.55rem;
+  text-transform:uppercase; letter-spacing:0.1em; color:var(--text3);
+  border-bottom:1px solid var(--border2); background:var(--bg1);
+}
+td {
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(255,255,255,0.012); }
+
+.mono { font-family:'Space Mono',monospace; }
+
+/* ═══════════════════════════════════════════════════════
+   BADGES
+   ═══════════════════════════════════════════════════════ */
+.badge {
+  display:inline-block; padding:2px 8px;
+  border-radius:20px; font-size:0.6rem;
+  font-family:'Space Mono',monospace; font-weight:700;
+  letter-spacing:0.04em;
+}
+.b-lime   { background:var(--lime-dim);   color:var(--lime);   border:1px solid rgba(184,255,0,0.15); }
+.b-amber  { background:var(--amber-dim);  color:var(--amber);  border:1px solid rgba(245,166,35,0.15); }
+.b-rose   { background:var(--rose-dim);   color:var(--rose);   border:1px solid rgba(255,61,90,0.15); }
+.b-sky    { background:var(--sky-dim);    color:var(--sky);    border:1px solid rgba(45,212,191,0.15); }
+.b-violet { background:var(--violet-dim); color:var(--violet); border:1px solid rgba(129,140,248,0.15); }
+
+/* ═══════════════════════════════════════════════════════
+   TAX ACCORDION
+   ═══════════════════════════════════════════════════════ */
+.tax-item {
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  margin-bottom:6px; overflow:hidden;
+}
+.tax-hdr {
+  padding:13px 16px; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--bg2); transition:background 0.12s;
+  user-select:none;
+}
+.tax-hdr:hover { background:var(--bg3); }
+.tax-hdr-left  { display:flex; align-items:center; gap:10px; }
+.tax-hdr-title {
+  font-family:'Inter',sans-serif; font-weight:600; font-size:0.85rem;
+}
+.tax-body {
+  display:none; padding:16px 18px;
+  background:var(--bg1); border-top:1px solid var(--border);
+}
+.tax-body.open { display:block; animation: tabIn 0.15s ease both; }
+.tax-body p { color:var(--text2); font-size:0.83rem; line-height:1.75; margin-bottom:10px; }
+.tax-callout {
+  background:rgba(184,255,0,0.05);
+  border-left:2px solid var(--lime);
+  border-radius:0 var(--r-xs) var(--r-xs) 0;
+  padding:9px 13px; font-size:0.75rem; color:var(--lime);
+  font-family:'Space Mono',monospace;
+}
+.chev { transition:transform 0.18s; color:var(--text3); font-size:0.75rem; }
+.chev.open { transform:rotate(180deg); }
+
+/* Monthly tracker */
+.tracker-wrap { margin-top:14px; border-top:1px solid var(--border); padding-top:14px; }
+.tracker-label {
+  font-family:'Space Mono',monospace; font-size:0.58rem;
+  text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--text3); margin-bottom:8px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.tracker-ytd {
+  font-family:'Space Grotesk',sans-serif; font-size:0.9rem;
+  font-weight:700; color:var(--lime);
+}
+.tracker-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:5px; }
+@media(max-width:500px) { .tracker-grid { grid-template-columns:repeat(4,1fr); } }
+.tracker-cell { display:flex; flex-direction:column; gap:3px; }
+.tracker-month {
+  font-family:'Space Mono',monospace; font-size:0.52rem;
+  text-transform:uppercase; letter-spacing:0.06em;
+  color:var(--text3); text-align:center;
+}
+.tracker-input {
+  background:var(--bg2) !important; border:1px solid var(--border) !important;
+  border-radius:5px !important; color:var(--text) !important;
+  font-family:'Space Mono',monospace !important; font-size:0.7rem !important;
+  padding:5px 3px !important; text-align:center; width:100% !important;
+  transition:border-color 0.12s !important;
+}
+.tracker-input:focus { border-color:rgba(184,255,0,0.4) !important; outline:none !important; box-shadow:none !important; }
+.tracker-input.has-value { border-color:rgba(184,255,0,0.2) !important; color:var(--lime) !important; }
+
+/* ═══════════════════════════════════════════════════════
+   SCENARIO / WHAT-IF
+   ═══════════════════════════════════════════════════════ */
+.sc-result {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:var(--r); padding:18px; margin-top:14px;
+}
+.sc-line {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 0; border-bottom:1px solid var(--border); font-size:0.82rem;
+}
+.sc-line:last-child { border-bottom:none; font-weight:600; }
+.sc-line span:last-child { font-family:'Space Mono',monospace; }
+
+/* ═══════════════════════════════════════════════════════
+   UPLOAD / DROP ZONES
+   ═══════════════════════════════════════════════════════ */
+.drop-zone {
+  border:1.5px dashed var(--border2); border-radius:var(--r);
+  padding:32px; text-align:center; cursor:pointer;
+  transition:all 0.18s; color:var(--text3); background:var(--bg2);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color:var(--lime); color:var(--lime);
+  background:rgba(184,255,0,0.03);
+}
+.drop-zone input { display:none; }
+.drop-icon { font-size:1.8rem; margin-bottom:8px; }
+
+/* CSV format info */
+.csv-format-info {
+  background:var(--bg2); border-left:2px solid var(--sky);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:11px 14px; font-size:0.78rem; color:var(--text2);
+  line-height:1.75; margin-bottom:12px;
+}
+.csv-format-info strong { color:var(--sky); }
+
+/* CSV preview */
+.csv-preview { background:var(--bg2); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-top:12px; }
+.csv-preview-hdr { padding:11px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.csv-preview-title { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem; }
+.csv-preview-rows { max-height:240px; overflow-y:auto; }
+.csv-row { display:flex; align-items:center; gap:10px; padding:8px 14px; border-bottom:1px solid var(--border); font-size:0.78rem; }
+.csv-row:last-child { border-bottom:none; }
+.csv-row-check {
+  width:15px; height:15px; border-radius:3px;
+  border:1px solid var(--border2); background:var(--bg3);
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; color:var(--lime); cursor:pointer;
+}
+.csv-row-check.checked { background:var(--lime-dim); border-color:rgba(184,255,0,0.3); }
+.csv-row-date { font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--text3); min-width:76px; }
+.csv-row-platform { min-width:86px; }
+.csv-row-pay { font-family:'Space Mono',monospace; color:var(--lime); min-width:56px; }
+.csv-row-miles { font-family:'Space Mono',monospace; color:var(--text3); font-size:0.65rem; }
+
+/* ═══════════════════════════════════════════════════════
+   RECEIPTS
+   ═══════════════════════════════════════════════════════ */
+.receipt-attach-zone {
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:var(--r-sm); padding:8px 13px;
+  cursor:pointer; font-size:0.8rem; color:var(--text2);
+  transition:border-color 0.12s, color 0.12s; user-select:none;
+}
+.receipt-attach-zone:hover { border-color:rgba(184,255,0,0.35); color:var(--lime); }
+.receipt-attach-zone.has-file { border-color:rgba(184,255,0,0.35); color:var(--lime); }
+.receipt-clear-btn { background:none; border:none; color:var(--rose); cursor:pointer; font-size:0.78rem; padding:0 2px; line-height:1; }
+
+.exp-thumb { width:34px; height:34px; border-radius:5px; object-fit:cover; border:1px solid var(--border); cursor:pointer; transition:opacity 0.12s; vertical-align:middle; }
+.exp-thumb:hover { opacity:0.8; }
+
+.lightbox { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center; padding:20px; }
+.lightbox img { max-width:100%; max-height:90vh; border-radius:var(--r); object-fit:contain; }
+.lightbox-close {
+  position:absolute; top:16px; right:18px;
+  background:rgba(255,255,255,0.08); border:none;
+  color:#fff; font-size:1.2rem; width:38px; height:38px;
+  border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.12s;
+}
+.lightbox-close:hover { background:rgba(255,255,255,0.16); }
+
+.ss-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin-top:14px; }
+.ss-item { position:relative; border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--border); aspect-ratio:4/3; background:var(--bg2); }
+.ss-item img { width:100%; height:100%; object-fit:cover; }
+.ss-del { position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.75); border:none; color:var(--rose); border-radius:5px; width:20px; height:20px; cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; }
+.ss-cap { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.72); padding:3px 7px; font-size:0.55rem; color:var(--text2); font-family:'Space Mono',monospace; }
+
+/* ═══════════════════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════════════════ */
+.prog-track { height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; margin:8px 0; }
+.prog-fill { height:100%; border-radius:2px; background:var(--lime); transition:width 0.55s cubic-bezier(0.4,0,0.2,1); }
+
+/* ═══════════════════════════════════════════════════════
+   EXPORT
+   ═══════════════════════════════════════════════════════ */
+.export-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 15px; background:var(--bg2);
+  border-radius:var(--r-sm); margin-bottom:7px;
+  border:1px solid var(--border); transition:border-color 0.12s;
+}
+.export-row:hover { border-color:var(--border2); }
+.export-left { display:flex; align-items:center; gap:12px; }
+.export-ico { width:36px; height:36px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+.export-name { font-weight:600; font-size:0.85rem; margin-bottom:1px; }
+.export-desc { font-size:0.65rem; color:var(--text3); font-family:'Space Mono',monospace; }
+
+/* ═══════════════════════════════════════════════════════
+   GAS IMPACT
+   ═══════════════════════════════════════════════════════ */
+.gas-month-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:7px; margin-top:10px; }
+.gas-month-cell { background:var(--bg2); border:1px solid var(--border); border-radius:var(--r-sm); padding:9px 7px; text-align:center; }
+.gas-month-name { font-family:'Space Mono',monospace; font-size:0.52rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:4px; }
+.gas-month-pct { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:700; }
+.gas-month-pct.low  { color:var(--lime); }
+.gas-month-pct.mid  { color:var(--amber); }
+.gas-month-pct.high { color:var(--rose); }
+.gas-month-sub { font-family:'Space Mono',monospace; font-size:0.52rem; color:var(--text3); margin-top:3px; }
+.gas-bar { height:3px; border-radius:2px; margin-top:5px; background:var(--border); overflow:hidden; }
+.gas-bar-fill { height:100%; border-radius:2px; transition:width 0.4s ease; }
+
+/* ═══════════════════════════════════════════════════════
+   TOAST — quieter, less alarming
+   ═══════════════════════════════════════════════════════ */
+.toast {
+  position:fixed;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--bg3); color:var(--text);
+  border:1px solid var(--border2);
+  font-family:'Inter',sans-serif; font-weight:500;
+  padding:9px 18px; border-radius:var(--r);
+  z-index:999; font-size:0.8rem;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.18s, transform 0.18s;
+  white-space:nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.error { background:var(--rose-dim); color:var(--rose); border-color:rgba(255,61,90,0.3); }
+.toast.success { border-color:rgba(184,255,0,0.25); }
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATES — purposeful, not decorative
+   ═══════════════════════════════════════════════════════ */
+.empty { text-align:center; padding:40px 20px; color:var(--text3); }
+.empty-icon { font-size:2rem; margin-bottom:10px; }
+.empty p { font-size:0.8rem; line-height:1.6; }
+
+/* ═══════════════════════════════════════════════════════
+   EDIT DRAWER — slide up to edit a logged trip
+   ═══════════════════════════════════════════════════════ */
+.edit-drawer {
+  position:fixed; inset:0; z-index:400;
+  display:flex; align-items:flex-end;
+  pointer-events:none;
+}
+.edit-drawer.open { pointer-events:all; }
+.edit-backdrop {
+  position:absolute; inset:0;
+  background:rgba(0,0,0,0);
+  transition:background 0.22s;
+}
+.edit-drawer.open .edit-backdrop { background:rgba(0,0,0,0.65); }
+.edit-panel {
+  position:relative; z-index:1;
+  width:100%; max-width:480px; margin:0 auto;
+  background:var(--bg1);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  border-top:1px solid var(--border2);
+  padding:12px 20px 36px;
+  transform:translateY(100%);
+  transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.edit-drawer.open .edit-panel { transform:translateY(0); }
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════ */
+@keyframes rise {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.rise-1 { animation:rise 0.35s 0.04s both; }
+.rise-2 { animation:rise 0.35s 0.10s both; }
+.rise-3 { animation:rise 0.35s 0.16s both; }
+.rise-4 { animation:rise 0.35s 0.22s both; }
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--border2); }
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE
+   ═══════════════════════════════════════════════════════ */
+@media(max-width:480px){
+  main { padding:16px 14px 120px; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); gap:7px; }
+  .today-earned { font-size:2.6rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Gig<em>Track</em></div>
+  <div class="header-right">
+    <div class="ty-toggle" id="ty-toggle"></div>
+    <div class="pill pill-lime" id="hdr-tax-year">2026</div>
+    <div class="pill pill-amber" id="hdr-net">$0 net</div>
+  </div>
+</header>
+
+<!-- NAV — 5 items, icons + labels, tab-bar style -->
+<nav id="main-nav">
+  <button class="nav-btn active" data-tab="dashboard" onclick="showTab('dashboard',this)">
+    <span class="nav-icon">⊙</span>Today
+  </button>
+  <button class="nav-btn" data-tab="trips" onclick="showTab('trips',this)">
+    <span class="nav-icon">⊕</span>Trips
+  </button>
+  <button class="nav-btn" data-tab="expenses" onclick="showTab('expenses',this)">
+    <span class="nav-icon">⊘</span>Expenses
+  </button>
+  <button class="nav-btn" data-tab="taxguide" onclick="showTab('taxguide',this)">
+    <span class="nav-icon">⊗</span>Tax Guide
+  </button>
+  <button class="nav-btn" data-tab="export" onclick="showTab('export',this)">
+    <span class="nav-icon">⊞</span>Export
+  </button>
+</nav>
+
+<main>
+
+<!-- ═══════════════ DASHBOARD / TODAY ═══════════════ -->
+<div class="tab active" id="tab-dashboard">
+
+  <!-- TODAY HERO — most important info, first thing you see -->
+  <div class="today-hero rise-1">
+    <div class="today-date" id="d-today-date"></div>
+    <div class="today-earned" id="d-today-earned">$0</div>
+    <div class="today-sub" id="d-today-sub">earned today</div>
+
+    <!-- Goal progress bar — inline, no card label overhead -->
+    <div class="goal-bar-wrap">
+      <div class="goal-bar-track">
+        <div class="goal-bar-fill" id="goal-bar" style="width:0%"></div>
+      </div>
+      <div class="goal-bar-labels">
+        <span id="goal-line1">Set a daily goal</span>
+        <span id="goal-pct-label">0%</span>
+      </div>
+    </div>
+
+    <!-- Today quick stats -->
+    <div class="today-row">
+      <div class="today-stat">
+        <div class="today-stat-label">Drops</div>
+        <div class="today-stat-val" id="d-today-drops">0</div>
+      </div>
+      <div class="today-stat">
+        <div class="today-stat-label">Miles</div>
+        <div class="today-stat-val" id="d-today-miles">0</div>
+      </div>
+      <div class="today-stat">
+        <div class="today-stat-label">Net/hr</div>
+        <div class="today-stat-val lime" id="d-today-nethr">—</div>
+      </div>
+      <div class="today-stat">
+        <div class="today-stat-label">To goal</div>
+        <div class="today-stat-val amber" id="d-today-remain">—</div>
+      </div>
+    </div>
+
+    <!-- Goal setter — minimal, inline -->
+    <div class="goal-edit">
+      <span class="goal-edit-label">Daily goal</span>
+      <input type="number" id="goal-amount" placeholder="e.g. 230" min="0" step="5"
+        oninput="saveGoal(this.value); updateGoalDisplay()">
+      <span id="goal-line2" style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text3)"></span>
+    </div>
+  </div>
+
+  <!-- YEAR STATS — secondary context -->
+  <div class="stats-grid rise-2">
+    <div class="stat-card lime">
+      <div class="stat-label">Gross</div>
+      <div class="stat-value lime" id="d-gross">$0</div>
+      <div class="stat-sub">YTD earnings</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">Tax Owed</div>
+      <div class="stat-value rose" id="d-tax">$0</div>
+      <div class="stat-sub">set aside</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Deductions</div>
+      <div class="stat-value amber" id="d-deductions">$0</div>
+      <div class="stat-sub">miles + expenses</div>
+    </div>
+    <div class="stat-card violet">
+      <div class="stat-label">Net Profit</div>
+      <div class="stat-value violet" id="d-net">$0</div>
+      <div class="stat-sub">after deductions</div>
+    </div>
+    <div class="stat-card sky">
+      <div class="stat-label">Miles</div>
+      <div class="stat-value sky" id="d-miles">0</div>
+      <div class="stat-sub" id="d-miles-sub">= $0 deduction</div>
+    </div>
+    <div class="stat-card lime">
+      <div class="stat-label">Avg Net/hr</div>
+      <div class="stat-value lime" id="d-nethr">—</div>
+      <div class="stat-sub">after tax + miles</div>
+    </div>
+  </div>
+
+  <!-- Earnings chart -->
+  <div class="card rise-3">
+    <div class="card-label">Earnings — <span id="chart-period-label">Last 8 Weeks</span></div>
+    <div class="chart-wrap" style="height:160px">
+      <canvas id="earnings-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Quarterly tax -->
+  <div class="card rise-3">
+    <div class="card-label">Quarterly Tax</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+      <span style="font-size:0.82rem;color:var(--text2)">Set aside this quarter</span>
+      <span style="font-family:'Space Mono',monospace;color:var(--rose);font-size:0.85rem;font-weight:700" id="d-quarterly">$0</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="d-qbar" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px">
+      <span style="font-size:0.62rem;color:var(--text3);font-family:'Space Mono',monospace">Next: <span id="d-deadline" style="color:var(--amber)"></span></span>
+      <span style="font-size:0.62rem;color:var(--text3);font-family:'Space Mono',monospace" id="d-qpct"></span>
+    </div>
+  </div>
+
+  <!-- Gas impact -->
+  <div class="card rise-3">
+    <div class="card-label">Gas vs Earnings — Month by Month</div>
+    <div id="gas-impact-body">
+      <div class="empty" style="padding:24px 0">
+        <div class="empty-icon">⛽</div>
+        <p>Log gas expenses to track fuel cost impact</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insights -->
+  <div class="card rise-4">
+    <div class="card-label">Insights</div>
+    <div id="insights-box">
+      <div class="empty" style="padding:24px 0">
+        <div class="empty-icon">◎</div>
+        <p>Log your first trip to see insights</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TRIPS ═══════════════ -->
+<div class="tab" id="tab-trips">
+
+  <!-- Mode toggle — segmented control style -->
+  <div class="qdrop-mode-toggle">
+    <button class="qdrop-mode-btn active" id="mode-drop" onclick="switchTripMode('drop')">Quick Drop</button>
+    <button class="qdrop-mode-btn" id="mode-shift" onclick="switchTripMode('shift')">Full Shift</button>
+    <button class="qdrop-mode-btn" id="mode-csv" onclick="switchTripMode('csv')">Import CSV</button>
+  </div>
+
+  <!-- ── QUICK DROP PANEL ── -->
+  <div class="qdrop-panel-tab active" id="panel-drop">
+    <div class="card">
+      <div class="card-label">Today's Drops</div>
+      <div class="drop-feed" id="drop-feed">
+        <div class="empty" style="padding:20px 0">
+          <div class="empty-icon">◎</div>
+          <p>Tap + to log your first drop today</p>
+        </div>
+      </div>
+      <div class="drop-session-total" id="drop-session-total" style="display:none">
+        <div>
+          <div class="drop-session-label">Today's Total</div>
+          <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text3)" id="drop-session-sub"></div>
+        </div>
+        <div class="drop-session-val" id="drop-session-val">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FULL SHIFT PANEL ── -->
+  <div class="qdrop-panel-tab" id="panel-shift">
+    <div class="card">
+      <div class="card-label">Log a Full Shift</div>
+      <div class="form-grid">
+        <div class="fgroup">
+          <span class="flabel">Date</span>
+          <input type="date" id="t-date">
+        </div>
+        <div class="fgroup">
+          <span class="flabel">Platform</span>
+          <select id="t-platform">
+            <option value="DoorDash">DoorDash</option>
+            <option value="Uber Eats">Uber Eats</option>
+            <option value="Instacart">Instacart</option>
+            <option value="Grubhub">Grubhub</option>
+            <option value="Lyft">Lyft</option>
+            <option value="Uber">Uber</option>
+            <option value="Amazon Flex">Amazon Flex</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <span class="flabel">Miles Driven</span>
+          <input type="number" id="t-miles" placeholder="e.g. 34.2" step="0.1" min="0">
+        </div>
+        <div class="fgroup">
+          <span class="flabel">Gross Earnings ($)</span>
+          <input type="number" id="t-earnings" placeholder="e.g. 87.50" step="0.01" min="0">
+        </div>
+        <div class="fgroup">
+          <span class="flabel">Hours Worked</span>
+          <input type="number" id="t-hours" placeholder="e.g. 4.5" step="0.5" min="0">
+        </div>
+        <div class="fgroup">
+          <span class="flabel">Notes (optional)</span>
+          <input type="text" id="t-notes" placeholder="Zone, conditions, bonuses...">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-lime" onclick="addTrip()">+ Log Shift</button>
+        <button class="btn btn-ghost" onclick="clearTripForm()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CSV IMPORT PANEL ── -->
+  <div class="qdrop-panel-tab" id="panel-csv">
+    <div class="card">
+      <div class="card-label">Import Earnings from Platform CSV</div>
+
+      <div class="csv-format-info">
+        <strong style="color:var(--lime)">DoorDash ✅</strong> Dasher app → Earnings tab → ⬇ Download icon → CSV with per-delivery date, pay &amp; miles<br><br>
+        <strong style="color:var(--lime)">Grubhub ✅</strong> Driver app → Earnings icon → Earnings History → select date → "Download earnings history" → lands in Files app (iPhone) or Downloads (Android)<br><br>
+        <strong style="color:var(--lime)">Uber Eats ✅</strong> app → Account → Tax Info → Download CSV<br><br>
+        <strong style="color:var(--lime)">Instacart ✅</strong> Shopper app → Earnings → Export<br><br>
+        <strong style="color:var(--lime)">Amazon Flex ✅</strong> Flex app → Earnings → Download<br><br>
+        <strong style="color:var(--amber)">Uber (rideshare) ⚠️</strong> Weekly only — partners.uber.com → Statements → pick a week → Download CSV. No bulk export; repeat per week.<br><br>
+        <strong style="color:var(--rose)">Lyft ❌</strong> No per-trip CSV export available. Lyft only provides a Tax Summary PDF. Use the <strong>⚡ Quick Drop</strong> mode to log Lyft rides manually mid-shift.<br><br>
+        GigTrack auto-detects the platform from the filename and column headers — just upload and review.
+      </div>
+
+      <label class="csv-drop-zone" for="csv-file-input">
+        <input type="file" id="csv-file-input" accept=".csv,.txt" onchange="handleCSVUpload(event)">
+        <div class="csv-icon">📂</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px">Tap to upload your earnings CSV</div>
+        <div style="font-size:0.75rem;color:var(--text3)">.csv or .txt file from DoorDash, Uber Eats, Instacart, Grubhub</div>
+      </label>
+
+      <!-- OR manual paste -->
+      <div style="margin-bottom:10px">
+        <div class="card-label" style="margin-bottom:8px">Or paste CSV data directly</div>
+        <textarea id="csv-paste" rows="4" placeholder="Paste your CSV rows here — date,platform,earnings,miles&#10;2025-03-15,DoorDash,8.50,3.2&#10;2025-03-15,DoorDash,12.75,5.1" style="font-family:'Space Mono',monospace;font-size:0.72rem;resize:vertical"></textarea>
+        <button class="btn btn-ghost" style="margin-top:8px" onclick="parseCSVPaste()">Parse Pasted Data</button>
+      </div>
+
+      <!-- Preview table -->
+      <div class="csv-preview" id="csv-preview" style="display:none">
+        <div class="csv-preview-hdr">
+          <div class="csv-preview-title" id="csv-preview-title">0 rows detected</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-ghost" style="padding:6px 12px;font-size:0.72rem" onclick="csvSelectAll(true)">All</button>
+            <button class="btn btn-ghost" style="padding:6px 12px;font-size:0.72rem" onclick="csvSelectAll(false)">None</button>
+            <button class="btn btn-lime" style="padding:8px 16px" onclick="importCSVRows()">Import Selected</button>
+          </div>
+        </div>
+        <div class="csv-preview-rows" id="csv-preview-rows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History — always visible -->
+  <div class="card" style="margin-top:4px">
+    <div class="card-label">All Trip History</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Platform</th><th>Miles</th>
+            <th>Earnings</th><th>Hours</th><th>$/hr</th><th>Net/hr</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="trips-tbody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:0.65rem;color:var(--text3);margin-top:10px;font-family:'Space Mono',monospace">
+      * Net/hr = after $0.21/mi operating cost + 28% tax estimate
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════ EXPENSES ═══════════════ -->
+<div class="tab" id="tab-expenses">
+  <div class="page-title">EXPENSE <em>TRACKER</em></div>
+
+  <div class="card">
+    <div class="card-label">Add an Expense</div>
+    <div class="form-grid">
+      <div class="fgroup">
+        <span class="flabel">Date</span>
+        <input type="date" id="e-date">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Category</span>
+        <select id="e-cat">
+          <option value="Gas">⛽ Gas</option>
+          <option value="Car Maintenance">🔧 Car Maintenance</option>
+          <option value="Car Wash">🚿 Car Wash</option>
+          <option value="Phone & Data">📱 Phone & Data</option>
+          <option value="Insurance">🛡️ Insurance</option>
+          <option value="Parking & Tolls">🅿️ Parking & Tolls</option>
+          <option value="Equipment">🎒 Equipment & Supplies</option>
+          <option value="Health Insurance">❤️ Health Insurance</option>
+          <option value="Retirement (SEP-IRA)">🏦 Retirement (SEP-IRA)</option>
+          <option value="Other">📦 Other</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Amount ($)</span>
+        <input type="number" id="e-amount" placeholder="e.g. 55.00" step="0.01" min="0">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Vendor / Description</span>
+        <input type="text" id="e-vendor" placeholder="e.g. Shell, Jiffy Lube...">
+      </div>
+    </div>
+    <!-- Optional receipt attachment -->
+    <div style="margin-bottom:16px">
+      <span class="flabel" style="display:block;margin-bottom:6px">Receipt Photo (optional)</span>
+      <label class="receipt-attach-zone" for="e-receipt" id="e-receipt-label">
+        <input type="file" id="e-receipt" accept="image/*" onchange="previewReceipt(event)" style="display:none">
+        <span id="e-receipt-icon">📎</span>
+        <span id="e-receipt-text">Attach receipt</span>
+        <button type="button" class="receipt-clear-btn" id="e-receipt-clear" onclick="clearReceiptAttachment(event)" style="display:none">✕</button>
+      </label>
+      <div id="e-receipt-preview" style="display:none;margin-top:10px">
+        <img id="e-receipt-img" src="" alt="Receipt preview"
+          style="max-height:120px;border-radius:8px;border:1px solid var(--border);object-fit:contain;background:var(--bg2)">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-lime" onclick="addExpense()">+ Add Expense</button>
+      <button class="btn btn-ghost" onclick="clearExpenseForm()">Clear</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Expense History</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Category</th><th>Vendor</th>
+            <th>Amount</th><th>Tax Saved*</th><th>Receipt</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="expenses-tbody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:0.65rem;color:var(--text3);margin-top:10px;font-family:'Space Mono',monospace">
+      * Tax savings estimated at combined 28% effective rate (SE tax + income tax)
+    </p>
+  </div>
+
+  <!-- Platform breakdown chart -->
+  <div class="card">
+    <div class="card-label">Expense Breakdown by Category</div>
+    <div class="chart-wrap" style="height:180px">
+      <canvas id="expense-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ RECEIPTS ═══════════════ -->
+<div class="tab" id="tab-receipts">
+  <div class="page-title">RECEIPT <em>VAULT</em></div>
+
+  <div class="card">
+    <div class="card-label">Upload & Organize</div>
+    <div class="form-grid" style="margin-bottom:14px">
+      <div class="fgroup">
+        <span class="flabel">Category</span>
+        <select id="ss-cat">
+          <option value="Gas Receipt">⛽ Gas Receipt</option>
+          <option value="Maintenance">🔧 Maintenance Receipt</option>
+          <option value="Earnings Screenshot">💰 Earnings Screenshot</option>
+          <option value="Mileage Record">📍 Mileage Record</option>
+          <option value="Insurance">🛡️ Insurance</option>
+          <option value="Other">📄 Other</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Date</span>
+        <input type="date" id="ss-date">
+      </div>
+    </div>
+    <label class="drop-zone" id="drop-zone" for="ss-input">
+      <input type="file" id="ss-input" accept="image/*" multiple onchange="handleUpload(event)">
+      <div class="drop-icon">📁</div>
+      <div style="font-weight:600;font-size:0.9rem;margin-bottom:4px">Tap to upload or drop files here</div>
+      <div style="font-size:0.75rem;color:var(--text3)">JPG, PNG, HEIC, WEBP supported</div>
+    </label>
+    <div id="storage-warn" style="display:none;margin-top:10px;padding:8px 12px;background:var(--rose-dim);border-radius:var(--r-sm);font-size:0.75rem;color:var(--rose);font-family:'Space Mono',monospace">
+      ⚠ Storage nearly full. Delete old screenshots before adding more.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Stored Receipts</div>
+    <div id="ss-grid">
+      <div class="empty"><div class="empty-icon">📸</div><p>No receipts stored yet</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAX GUIDE ═══════════════ -->
+<div class="tab" id="tab-taxguide">
+  <div class="page-title" id="taxguide-title">2026 GIG WORKER <em>TAX GUIDE</em></div>
+
+  <div class="card" style="background:rgba(200,255,0,0.04);border-color:rgba(200,255,0,0.15);margin-bottom:18px">
+    <div style="font-size:0.85rem;color:var(--text2);line-height:1.75">
+      You're self-employed. You file <strong style="color:var(--text)">Schedule C</strong> and pay
+      <strong style="color:var(--text)">self-employment tax (15.3%)</strong> on top of regular income tax.
+      Every legitimate business expense reduces both. Figures reflect the tax year selected above
+      (<strong style="color:var(--lime)" id="tg-banner-file">filed in 2027</strong>).
+      Key numbers: standard mileage <strong style="color:var(--text)" id="tg-banner-miles">72.5¢/mile</strong> ·
+      standard deduction <strong style="color:var(--text)" id="tg-banner-stdded">$16,100</strong> (single) ·
+      SE tax <strong style="color:var(--text)">15.3%</strong> ·
+      SEP-IRA max <strong style="color:var(--text)" id="tg-banner-sep">$72,000</strong>.
+    </div>
+  </div>
+
+  <div id="tax-accordions"></div>
+</div>
+
+<!-- ═══════════════ WHAT-IF ═══════════════ -->
+<div class="tab" id="tab-whatif">
+  <div class="page-title">WHAT-IF <em>CALCULATOR</em></div>
+
+  <!-- Should I buy it? -->
+  <div class="card">
+    <div class="card-label">Should I Do This? — Tax Impact</div>
+    <div class="form-grid">
+      <div class="fgroup">
+        <span class="flabel">Annual Gross Gig Income ($)</span>
+        <input type="number" id="wi-income" placeholder="e.g. 36000" oninput="runWhatIf()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Planned Expense ($)</span>
+        <input type="number" id="wi-expense" placeholder="e.g. 400" oninput="runWhatIf()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Expense Type</span>
+        <select id="wi-type" onchange="runWhatIf()">
+          <option value="full">Fully Deductible (gas, maintenance, supplies)</option>
+          <option value="partial">Partially Deductible (phone ~65%)</option>
+          <option value="vehicle">Major Vehicle Purchase (Section 179)</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Filing Status</span>
+        <select id="wi-filing" onchange="runWhatIf()">
+          <option value="single">Single</option>
+          <option value="mfj">Married Filing Jointly</option>
+          <option value="hoh">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="sc-result" id="wi-result" style="display:none">
+      <div style="font-family:'Space Grotesk',sans-serif;letter-spacing:1.5px;margin-bottom:14px;font-size:0.95rem">TAX IMPACT ANALYSIS</div>
+      <div class="sc-line"><span>Gross gig income</span><span id="wi-r-gross"></span></div>
+      <div class="sc-line"><span>½ SE tax deduction</span><span id="wi-r-seded" style="color:var(--lime)"></span></div>
+      <div class="sc-line"><span>This expense deduction</span><span id="wi-r-expded" style="color:var(--lime)"></span></div>
+      <div class="sc-line"><span>Taxable income after deductions</span><span id="wi-r-taxable"></span></div>
+      <div class="sc-line"><span>SE tax (15.3%)</span><span id="wi-r-se" style="color:var(--rose)"></span></div>
+      <div class="sc-line"><span>Income tax (est.)</span><span id="wi-r-it" style="color:var(--rose)"></span></div>
+      <div class="sc-line" style="margin-top:4px;padding-top:10px;border-top:1px solid var(--border2)">
+        <span style="color:var(--lime)">Your actual cost after tax savings</span>
+        <span id="wi-r-realcost" style="color:var(--lime);font-family:'Space Grotesk',sans-serif;font-size:1.2rem;letter-spacing:1px"></span>
+      </div>
+      <div class="sc-line">
+        <span style="color:var(--amber)">Tax dollars saved</span>
+        <span id="wi-r-saved" style="color:var(--amber)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mileage comparison -->
+  <div class="card">
+    <div class="card-label">Standard Mileage vs Actual Expenses</div>
+    <div class="form-grid">
+      <div class="fgroup">
+        <span class="flabel">Work Miles / Year</span>
+        <input type="number" id="mc-miles" placeholder="e.g. 18000" oninput="runMileComp()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Annual Gas ($)</span>
+        <input type="number" id="mc-gas" placeholder="e.g. 3200" oninput="runMileComp()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Annual Maintenance ($)</span>
+        <input type="number" id="mc-maint" placeholder="e.g. 1400" oninput="runMileComp()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Annual Insurance ($)</span>
+        <input type="number" id="mc-ins" placeholder="e.g. 1800" oninput="runMileComp()">
+      </div>
+    </div>
+    <div class="sc-result" id="mc-result" style="display:none">
+      <div class="sc-line"><span>Standard mileage (70¢ × miles)</span><span id="mc-r-std" style="color:var(--lime)"></span></div>
+      <div class="sc-line"><span>Actual expense total</span><span id="mc-r-act" style="color:var(--amber)"></span></div>
+      <div class="sc-line"><span style="color:var(--lime)">Recommended method</span><span id="mc-r-rec"></span></div>
+      <div class="sc-line"><span>You save</span><span id="mc-r-diff" style="color:var(--violet)"></span></div>
+    </div>
+  </div>
+
+  <!-- Quarterly estimator -->
+  <div class="card">
+    <div class="card-label">Quarterly Payment Estimator</div>
+    <div class="form-grid">
+      <div class="fgroup">
+        <span class="flabel">Expected Annual Gross ($)</span>
+        <input type="number" id="qe-gross" placeholder="e.g. 42000" oninput="runQuarterly()">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Expected Annual Deductions ($)</span>
+        <input type="number" id="qe-ded" placeholder="e.g. 12000" oninput="runQuarterly()">
+      </div>
+    </div>
+    <div class="sc-result" id="qe-result" style="display:none">
+      <div class="sc-line"><span>Net taxable income</span><span id="qe-net"></span></div>
+      <div class="sc-line"><span>Annual tax estimate</span><span id="qe-annual" style="color:var(--rose)"></span></div>
+      <div class="sc-line"><span style="color:var(--amber)">Each quarterly payment</span><span id="qe-quarterly" style="color:var(--amber);font-family:'Space Grotesk',sans-serif;font-size:1.2rem;letter-spacing:1px"></span></div>
+      <div class="sc-line"><span>Set aside per $100 earned</span><span id="qe-per100" style="color:var(--sky)"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EXPORT ═══════════════ -->
+<div class="tab" id="tab-export">
+  <div class="page-title">TAX TIME <em>EXPORT</em></div>
+
+  <div class="stats-grid" style="margin-bottom:18px">
+    <div class="stat-card lime">
+      <div class="stat-label">Total Gross</div>
+      <div class="stat-value lime" id="ex-gross">$0</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Total Deductions</div>
+      <div class="stat-value amber" id="ex-ded">$0</div>
+    </div>
+    <div class="stat-card violet">
+      <div class="stat-label">Net Profit</div>
+      <div class="stat-value violet" id="ex-net">$0</div>
+    </div>
+    <div class="stat-card rose">
+      <div class="stat-label">Est. Tax Owed</div>
+      <div class="stat-value rose" id="ex-tax">$0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Download Options</div>
+
+    <div class="export-row">
+      <div class="export-left">
+        <div class="export-ico" style="background:var(--lime-dim)">📋</div>
+        <div>
+          <div class="export-name">Full Tax Report</div>
+          <div class="export-desc">All trips + expenses — Schedule C ready (CSV)</div>
+        </div>
+      </div>
+      <button class="btn btn-lime" onclick="exportFullCSV()">Download</button>
+    </div>
+
+    <div class="export-row">
+      <div class="export-left">
+        <div class="export-ico" style="background:var(--amber-dim)">🧾</div>
+        <div>
+          <div class="export-name">Expense Summary</div>
+          <div class="export-desc">Expenses by category (CSV)</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="exportExpensesCSV()">Download</button>
+    </div>
+
+    <div class="export-row">
+      <div class="export-left">
+        <div class="export-ico" style="background:var(--sky-dim)">📍</div>
+        <div>
+          <div class="export-name">IRS Mileage Log</div>
+          <div class="export-desc">IRS-compliant format (CSV)</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="exportMileageCSV()">Download</button>
+    </div>
+
+    <div class="export-row">
+      <div class="export-left">
+        <div class="export-ico" style="background:var(--violet-dim)">💾</div>
+        <div>
+          <div class="export-name">Backup All Data</div>
+          <div class="export-desc">Full JSON backup — restore anytime</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="exportJSON()">Backup</button>
+    </div>
+
+    <div class="export-row">
+      <div class="export-left">
+        <div class="export-ico" style="background:var(--rose-dim)">📂</div>
+        <div>
+          <div class="export-name">Restore from Backup</div>
+          <div class="export-desc">Import a JSON backup file</div>
+        </div>
+      </div>
+      <label class="btn btn-ghost" style="cursor:pointer">
+        Import <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
+      </label>
+    </div>
+  </div>
+
+  <div class="card" style="background:rgba(255,179,64,0.04);border-color:rgba(255,179,64,0.15)">
+    <div class="card-label" style="color:var(--amber)" id="qdates-label">Quarterly Deadlines — 2026</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px" id="qdates-grid">
+      <!-- populated by renderQDates() -->
+    </div>
+    <div style="font-size:0.78rem;color:var(--text3);line-height:1.7">
+      Earning in <strong style="color:var(--lime)" id="ex-earn-year">2026</strong> — file by April 2027.
+      File <strong style="color:var(--text)">Schedule C + Schedule SE</strong> with your Form 1040.
+      You receive <strong style="color:var(--text)">1099-NEC</strong> from platforms that paid you $600+, not a W-2. <br>
+      <em>GigTrack provides estimates only — consult a tax professional for your specific situation.</em>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- FAB — Quick Drop, always one tap away -->
+<button class="fab" onclick="openQDSheet()" aria-label="Log a drop">+</button>
+<div class="fab-tip">Log a drop</div>
+
+<!-- QUICK DROP SHEET — slides up from bottom -->
+<div class="qdrop-sheet" id="qdrop-sheet">
+  <div class="qdrop-backdrop" onclick="closeQDSheet()"></div>
+  <div class="qdrop-panel-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">
+      <span>Log a Drop</span>
+      <button class="sheet-close" onclick="closeQDSheet()">✕</button>
+    </div>
+
+    <div class="qdrop-display">
+      <div class="qdrop-amount-wrap">
+        <div class="qdrop-dollar">$</div>
+        <div class="qdrop-amount" id="qd-display">0.00</div>
+      </div>
+      <div class="qdrop-meta">
+        <div class="qdrop-meta-line">Platform</div>
+        <div class="qdrop-meta-val" id="qd-platform-display">DoorDash</div>
+        <div class="qdrop-meta-line" style="margin-top:4px">Miles</div>
+        <div class="qdrop-meta-val" id="qd-miles-display">—</div>
+      </div>
+    </div>
+
+    <div class="qdrop-options">
+      <select id="qd-platform" onchange="$('qd-platform-display').textContent=this.value">
+        <option value="DoorDash">DoorDash</option>
+        <option value="Uber Eats">Uber Eats</option>
+        <option value="Instacart">Instacart</option>
+        <option value="Grubhub">Grubhub</option>
+        <option value="Lyft">Lyft</option>
+        <option value="Uber">Uber</option>
+        <option value="Amazon Flex">Amazon Flex</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="number" id="qd-miles" placeholder="Miles (optional)" step="0.1" min="0"
+        oninput="$('qd-miles-display').textContent=this.value?this.value+' mi':'—'">
+    </div>
+
+    <div class="keypad">
+      <div class="key" onclick="qdKey('1')">1</div>
+      <div class="key" onclick="qdKey('2')">2</div>
+      <div class="key" onclick="qdKey('3')">3</div>
+      <div class="key" onclick="qdKey('4')">4</div>
+      <div class="key" onclick="qdKey('5')">5</div>
+      <div class="key" onclick="qdKey('6')">6</div>
+      <div class="key" onclick="qdKey('7')">7</div>
+      <div class="key" onclick="qdKey('8')">8</div>
+      <div class="key" onclick="qdKey('9')">9</div>
+      <div class="key" onclick="qdKey('.')">.</div>
+      <div class="key" onclick="qdKey('0')">0</div>
+      <div class="key key-del" onclick="qdDel()">⌫</div>
+      <div class="key key-ok" onclick="qdSave()">Log Drop</div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT DRAWER — slide up to edit a trip -->
+<div class="edit-drawer" id="edit-drawer">
+  <div class="edit-backdrop" onclick="closeEditDrawer()"></div>
+  <div class="edit-panel">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">
+      <span>Edit Trip</span>
+      <button class="sheet-close" onclick="closeEditDrawer()">✕</button>
+    </div>
+    <input type="hidden" id="edit-trip-id">
+    <div class="form-grid">
+      <div class="fgroup">
+        <span class="flabel">Date</span>
+        <input type="date" id="edit-date">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Platform</span>
+        <select id="edit-platform">
+          <option>DoorDash</option><option>Uber Eats</option><option>Instacart</option>
+          <option>Grubhub</option><option>Lyft</option><option>Uber</option>
+          <option>Amazon Flex</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Earnings ($)</span>
+        <input type="number" id="edit-earnings" step="0.01" min="0">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Miles</span>
+        <input type="number" id="edit-miles" step="0.1" min="0">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Hours</span>
+        <input type="number" id="edit-hours" step="0.5" min="0">
+      </div>
+      <div class="fgroup">
+        <span class="flabel">Notes</span>
+        <input type="text" id="edit-notes">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-lime" onclick="saveEditTrip()">Save Changes</button>
+      <button class="btn btn-ghost" onclick="closeEditDrawer()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST — quiet, informational -->
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   APP VERSION — bump this on every deploy to bust cache
+   Format: YYYY.MM.DD.build
+   ═══════════════════════════════════════════════════════ */
+const APP_VERSION = '2026.05.28.1';
+const VERSION_KEY = 'gigtrack_version';
+
+function bustCache() {
+  const stored = localStorage.getItem(VERSION_KEY);
+  if (stored === APP_VERSION) return; // already current, nothing to do
+
+  if (stored !== null) {
+    // Previous version existed — stamp new version then hard-reload once.
+    // Stamp first so reload doesn't loop; if page crashes after stamp,
+    // user can still use the app (just won't reload again until next deploy).
+    localStorage.setItem(VERSION_KEY, APP_VERSION);
+    window.location.reload(true);
+    return; // reload is async — stop executing current version
+  }
+  // First install — stamp silently, no reload needed
+  localStorage.setItem(VERSION_KEY, APP_VERSION);
+}
+
+// Run immediately — before any other code so stale code stops executing ASAP
+bustCache();
+
+/* ═══════════════════════════════════════════════════════
+   TAX ENGINE — Dual-year config (2025 & 2026)
+   Sources: IRS Rev. Proc. 2024-40 (2025) & Rev. Proc. 2025-32 (2026)
+   ═══════════════════════════════════════════════════════ */
+
+// All verified IRS figures by tax year
+const TAX_YEARS = {
+  2025: {
+    MILEAGE_RATE:            0.70,
+    SE_RATE:                 0.153,
+    SE_MULTIPLIER:           0.9235,
+    OPERATING_COST_PER_MILE: 0.21,
+    EFFECTIVE_RATE:          0.28,
+    SEP_IRA_MAX:             70000,
+    STD_DEDUCTION: { single: 15750, mfj: 31500, hoh: 23625 },
+    BRACKETS: [
+      { limit: 11925,    rate: 0.10, base: 0        },
+      { limit: 48475,    rate: 0.12, base: 1192.50  },
+      { limit: 103350,   rate: 0.22, base: 5578.50  },
+      { limit: 197300,   rate: 0.24, base: 16762.50 },
+      { limit: Infinity, rate: 0.32, base: 40440.50 },
+    ],
+    QUARTERLY_DEADLINES: ['Apr 15', 'Jun 16', 'Sep 15', 'Jan 15 (2026)'],
+    FILE_YEAR: 2026,
+  },
+  2026: {
+    MILEAGE_RATE:            0.725,
+    SE_RATE:                 0.153,
+    SE_MULTIPLIER:           0.9235,
+    OPERATING_COST_PER_MILE: 0.22,
+    EFFECTIVE_RATE:          0.28,
+    SEP_IRA_MAX:             72000,
+    STD_DEDUCTION: { single: 16100, mfj: 32200, hoh: 24150 },
+    // IRS Rev. Proc. 2025-32 — 2026 brackets (single filer)
+    BRACKETS: [
+      { limit: 12400,    rate: 0.10, base: 0        },
+      { limit: 50400,    rate: 0.12, base: 1240.00  },
+      { limit: 105700,   rate: 0.22, base: 5800.00  },
+      { limit: 201775,   rate: 0.24, base: 17961.00 },
+      { limit: Infinity, rate: 0.32, base: 40985.00 },
+    ],
+    QUARTERLY_DEADLINES: ['Apr 15', 'Jun 16', 'Sep 15', 'Jan 15 (2027)'],
+    FILE_YEAR: 2027,
+  },
+};
+
+// Active tax year — set dynamically in init from current calendar year
+let _activeTaxYear = new Date().getFullYear();
+
+// Safe config lookup — falls back to most recent known year if current year
+// is not yet in TAX_YEARS (e.g. Jan 1 2027 before config is updated)
+function _taxConfig(year) {
+  if (TAX_YEARS[year]) return TAX_YEARS[year];
+  // Fall back to the highest configured year
+  const knownYears = Object.keys(TAX_YEARS).map(Number).sort((a,b) => b - a);
+  return TAX_YEARS[knownYears[0]];
+}
+
+const TAX = {
+  get MILEAGE_RATE()            { return _taxConfig(_activeTaxYear).MILEAGE_RATE; },
+  get SE_RATE()                 { return _taxConfig(_activeTaxYear).SE_RATE; },
+  get SE_MULTIPLIER()           { return _taxConfig(_activeTaxYear).SE_MULTIPLIER; },
+  get OPERATING_COST_PER_MILE() { return _taxConfig(_activeTaxYear).OPERATING_COST_PER_MILE; },
+  get EFFECTIVE_RATE()          { return _taxConfig(_activeTaxYear).EFFECTIVE_RATE; },
+  get STD_DEDUCTION()           { return _taxConfig(_activeTaxYear).STD_DEDUCTION; },
+  get BRACKETS()                { return _taxConfig(_activeTaxYear).BRACKETS; },
+  get SEP_IRA_MAX()             { return _taxConfig(_activeTaxYear).SEP_IRA_MAX; },
+  get activeYear()              { return _activeTaxYear; },
+  get config()                  { return _taxConfig(_activeTaxYear); },
+
+  calcBracket(taxable) {
+    for (const b of this.BRACKETS) {
+      if (taxable <= b.limit) {
+        const prev = this.BRACKETS[this.BRACKETS.indexOf(b) - 1];
+        const base = prev ? prev.limit : 0;
+        return b.base + (taxable - base) * b.rate;
+      }
+    }
+    return 0;
+  },
+
+  /** Core calculation — called everywhere */
+  calculate(trips, expenses) {
+    const gross        = trips.reduce((s, t) => s + t.earnings, 0);
+    const totalMiles   = trips.reduce((s, t) => s + t.miles, 0);
+    const totalHours   = trips.reduce((s, t) => s + t.hours, 0);
+    const mileDeduction = totalMiles * this.MILEAGE_RATE;
+    const expenseTotal = expenses.reduce((s, e) => s + e.amount, 0);
+    const totalDeductions = mileDeduction + expenseTotal;
+    const halfSE       = gross * this.SE_RATE * 0.5;
+    const netProfit    = Math.max(0, gross - totalDeductions - halfSE);
+    const seTax        = gross * this.SE_MULTIPLIER * this.SE_RATE;
+    const incomeTax    = this.calcBracket(Math.max(0, netProfit - this.STD_DEDUCTION.single));
+    const totalTax     = seTax + incomeTax;
+    const netAfterTax  = gross - totalDeductions - totalTax;
+    const avgNetPerHr  = totalHours > 0
+      ? (gross - totalMiles * this.OPERATING_COST_PER_MILE - totalTax) / totalHours
+      : null;
+
+    return {
+      gross, totalMiles, totalHours, mileDeduction,
+      expenseTotal, totalDeductions, halfSE, netProfit,
+      seTax, incomeTax, totalTax, netAfterTax, avgNetPerHr,
+    };
+  },
+};
+
+/* ═══════════════════════════════════════════════════════
+   DATA STORE — single mutable store, typed schema
+   ═══════════════════════════════════════════════════════ */
+const STORE = (() => {
+  const KEY = 'gigtrack_v2';
+  const SCHEMA = { trips: [], expenses: [], screenshots: [], taxTracking: {} };
+
+  // ── Migration: taxTracking was flat { gas:[12] } before year-scoping.
+  //    Detect old format and move data into the correct year bucket.
+  function migrateTaxTracking(raw) {
+    if (!raw || typeof raw !== 'object') return {};
+    // New format: keys are 4-digit years e.g. { 2025: { gas: [...] } }
+    const firstKey = Object.keys(raw)[0];
+    if (!firstKey) return {};
+    if (/^\d{4}$/.test(firstKey)) return raw; // already new format
+    // Old format detected — migrate into _activeTaxYear bucket
+    const year = _activeTaxYear;
+    return { [year]: raw };
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return { ...SCHEMA };
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed.trips) || !Array.isArray(parsed.expenses)) throw new Error();
+      return {
+        ...SCHEMA,
+        ...parsed,
+        taxTracking: migrateTaxTracking(parsed.taxTracking),
+      };
+    } catch {
+      return { ...SCHEMA };
+    }
+  }
+
+  function storageUsedKB() {
+    let total = 0;
+    for (const k of Object.keys(localStorage)) {
+      total += (localStorage.getItem(k) || '').length;
+    }
+    return total / 1024;
+  }
+
+  const state = load();
+
+  return {
+    // ── Raw access (all years) — used by backup/restore only
+    get trips()        { return state.trips; },
+    get expenses()     { return state.expenses; },
+    get screenshots()  { return state.screenshots; },
+    get taxTracking()  { return state.taxTracking; },
+
+    // ── Year-scoped access — used by all UI and calculation functions
+    get tripsForYear()    { return state.trips.filter(t => yearOf(t.date) === _activeTaxYear); },
+    get expensesForYear() { return state.expenses.filter(e => yearOf(e.date) === _activeTaxYear); },
+
+    // ── Years that have any data (for dynamic toggle generation)
+    get yearsWithData() {
+      const years = new Set();
+      state.trips.forEach(t => years.add(yearOf(t.date)));
+      state.expenses.forEach(e => years.add(yearOf(e.date)));
+      // Always include all configured tax years
+      Object.keys(TAX_YEARS).forEach(y => years.add(parseInt(y)));
+      // Always include the current calendar year so the toggle auto-advances
+      years.add(new Date().getFullYear());
+      return [...years].sort();
+    },
+
+    save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      } catch (e) {
+        toast('Storage full — delete old data', true);
+      }
+    },
+
+    addTrip(t)       { state.trips.push(t);       this.save(); },
+    deleteTrip(id)   { state.trips = state.trips.filter(t => t.id !== id); this.save(); },
+    addExpense(e)    { state.expenses.push(e);     this.save(); },
+    deleteExpense(id){ state.expenses = state.expenses.filter(e => e.id !== id); this.save(); },
+    addScreenshot(s) { state.screenshots.push(s); this.save(); },
+    deleteScreenshot(id){ state.screenshots = state.screenshots.filter(s => s.id !== id); this.save(); },
+    storageWarning() { return storageUsedKB() > 3500; },
+
+    // ── Year-scoped tax tracking: taxTracking[year][itemKey][monthIndex]
+    _yearTracking(year) {
+      if (!state.taxTracking[year]) state.taxTracking[year] = {};
+      return state.taxTracking[year];
+    },
+    setTaxMonth(itemKey, monthIndex, value) {
+      const yt = this._yearTracking(_activeTaxYear);
+      if (!yt[itemKey]) yt[itemKey] = new Array(12).fill(0);
+      yt[itemKey][monthIndex] = parseFloat(value) || 0;
+      this.save();
+    },
+    getTaxMonths(itemKey) {
+      const yt = this._yearTracking(_activeTaxYear);
+      return yt[itemKey] || new Array(12).fill(0);
+    },
+    resetTaxMonths(itemKey) {
+      const yt = this._yearTracking(_activeTaxYear);
+      yt[itemKey] = new Array(12).fill(0);
+      // no save() here — sync calls save via setTaxMonth
+    },
+
+    replaceAll(imported) {
+      state.trips        = imported.trips        || [];
+      state.expenses     = imported.expenses     || [];
+      state.screenshots  = imported.screenshots  || [];
+      state.taxTracking  = migrateTaxTracking(imported.taxTracking || {});
+      this.save();
+    },
+  };
+})();
+
+/* ═══════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+
+function fmtMoney(n)  { return '$' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function fmtInt(n)    { return Math.abs(n).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function today()      { return new Date().toISOString().split('T')[0]; }
+function uid()        { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function yearOf(dateStr) { return parseInt((dateStr || '0000').slice(0, 4)); }
+
+function toast(msg, isError = false) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : ' success');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.classList.remove('show'); el.textContent=''; }, 2800);
+}
+
+function nextDeadline() {
+  // Use the active tax year's quarterly deadlines
+  const deadlines = TAX.config.QUARTERLY_DEADLINES;
+  const now = new Date();
+  const year = _activeTaxYear;
+  const dates = [
+    new Date(year, 3, 15),   // Apr 15
+    new Date(year, 5, 16),   // Jun 16
+    new Date(year, 8, 15),   // Sep 15
+    new Date(year + 1, 0, 15), // Jan 15 next year
+  ];
+  for (let i = 0; i < dates.length; i++) {
+    if (dates[i] > now) return deadlines[i];
+  }
+  return deadlines[deadlines.length - 1];
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════ */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  // Handle merged tabs — receipts lives inside expenses, whatif inside taxguide
+  const tabId = id === 'receipts' ? 'expenses' : id === 'whatif' ? 'taxguide' : id;
+  const tabEl = $('tab-' + tabId);
+  if (tabEl) tabEl.classList.add('active');
+  if (btn) btn.classList.add('active');
+  // Sync nav highlight for merged tabs — use data-tab, not onclick string parsing
+  if (!btn) {
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      if (b.dataset.tab === tabId) b.classList.add('active');
+    });
+  }
+  if (tabId === 'dashboard') updateDashboard();
+  if (tabId === 'export')    updateExport();
+  if (tabId === 'expenses')  renderExpenseChart();
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAX YEAR SWITCHER
+   ═══════════════════════════════════════════════════════ */
+function buildYearToggle() {
+  const toggle = $('ty-toggle');
+  if (!toggle) return;
+  // Years = all configured tax years + any year with data
+  const years = STORE.yearsWithData;
+  toggle.innerHTML = years.map(y => `
+    <button class="ty-btn ${y === _activeTaxYear ? 'active' : ''}"
+      data-year="${y}" onclick="setTaxYear(${y})">${y}</button>`
+  ).join('');
+}
+
+function setTaxYear(year) {
+  _activeTaxYear = parseInt(year);
+  localStorage.setItem('gigtrack_tax_year', year);
+
+  // Rebuild toggle in case new year appeared
+  buildYearToggle();
+
+  // Update toggle button states
+  document.querySelectorAll('.ty-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.year) === _activeTaxYear);
+  });
+
+  // Update header badge — year only, consistent with toggle buttons
+  const badge = $('hdr-tax-year');
+  if (badge) badge.textContent = _activeTaxYear;
+
+  // Update the tax guide banner numbers
+  const cfg = TAX.config;
+  const bannerMiles  = $('tg-banner-miles');
+  const bannerStdDed = $('tg-banner-stdded');
+  const bannerSEP    = $('tg-banner-sep');
+  const bannerFile   = $('tg-banner-file');
+  if (bannerMiles)  bannerMiles.textContent  = (cfg.MILEAGE_RATE * 100).toFixed(1) + '¢/mile';
+  if (bannerStdDed) bannerStdDed.textContent = '$' + cfg.STD_DEDUCTION.single.toLocaleString();
+  if (bannerSEP)    bannerSEP.textContent    = '$' + cfg.SEP_IRA_MAX.toLocaleString();
+  if (bannerFile)   bannerFile.textContent   = 'filed in ' + cfg.FILE_YEAR;
+
+  // Update export earn year label
+  const earnYearEl = $('ex-earn-year');
+  if (earnYearEl) earnYearEl.textContent = _activeTaxYear;
+
+  // Rebuild tax guide with new year's data
+  buildTaxGuide();
+
+  // Refresh all calculated views
+  markGasDirty();
+  updateDashboard();
+  updateGoalDisplay();
+  renderWhatIfIfOpen();
+}
+
+function renderWhatIfIfOpen() {
+  // Re-run calculators if their inputs have values
+  if ($('wi-income') && $('wi-income').value) runWhatIf();
+  if ($('mc-miles') && $('mc-miles').value)   runMileComp();
+  if ($('qe-gross') && $('qe-gross').value)   runQuarterly();
+}
+
+/* ═══════════════════════════════════════════════════════
+   FAB — QUICK DROP SHEET
+   ═══════════════════════════════════════════════════════ */
+// Scroll lock — reference counted so nested sheets don't conflict
+let _scrollLocks = 0;
+function lockScroll()   { if (++_scrollLocks === 1) document.body.style.overflow = 'hidden'; }
+function unlockScroll() { if (--_scrollLocks <= 0) { _scrollLocks = 0; document.body.style.overflow = ''; } }
+
+function openQDSheet() {
+  $('qdrop-sheet').classList.add('open');
+  lockScroll();
+  // Reset keypad
+  _qdRaw = '';
+  $('qd-display').textContent = '0.00';
+}
+
+function closeQDSheet() {
+  $('qdrop-sheet').classList.remove('open');
+  unlockScroll();
+}
+
+// Close on escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeQDSheet(); closeEditDrawer(); }
+});
+
+/* ═══════════════════════════════════════════════════════
+   EDIT DRAWER
+   ═══════════════════════════════════════════════════════ */
+function openEditDrawer(tripId) {
+  const trip = STORE.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  $('edit-trip-id').value  = tripId;
+  $('edit-date').value     = trip.date;
+  $('edit-platform').value = trip.platform;
+  $('edit-earnings').value = trip.earnings;
+  $('edit-miles').value    = trip.miles;
+  $('edit-hours').value    = trip.hours;
+  $('edit-notes').value    = trip.notes || '';
+  $('edit-drawer').classList.add('open');
+  lockScroll();
+}
+
+function closeEditDrawer() {
+  $('edit-drawer').classList.remove('open');
+  unlockScroll();
+}
+
+function saveEditTrip() {
+  const id       = $('edit-trip-id').value;
+  const earnings = parseFloat($('edit-earnings').value) || 0;
+  const date     = $('edit-date').value;
+  if (!date || !earnings) return toast('Date and earnings required', true);
+
+  const idx = STORE.trips.findIndex(t => t.id === id);
+  if (idx < 0) return;
+  STORE.trips[idx] = {
+    ...STORE.trips[idx],
+    date,
+    platform: $('edit-platform').value,
+    earnings,
+    miles:  parseFloat($('edit-miles').value)  || 0,
+    hours:  parseFloat($('edit-hours').value)  || 0,
+    notes:  $('edit-notes').value.trim(),
+  };
+  STORE.save();
+  closeEditDrawer();
+  renderTrips();
+  renderDropFeed();
+  updateDashboard();
+  toast('Trip updated');
+}
+
+function switchTripMode(mode) {
+  ['drop','shift','csv'].forEach(m => {
+    const el = $('panel-' + m);
+    if (el) el.classList.toggle('active', m === mode);
+    const btn = $('mode-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+  });
+  if (mode !== 'csv') {
+    _csvRows = [];
+    const preview = $('csv-preview');
+    if (preview) preview.style.display = 'none';
+  }
+  if (mode === 'drop') renderDropFeed();
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUICK DROP KEYPAD
+   ═══════════════════════════════════════════════════════ */
+let _qdRaw = '';   // raw digit string e.g. "850" = $8.50
+
+function qdFormat(raw) {
+  // treat raw as cents: "850" → 8.50
+  const cents = parseInt(raw || '0', 10);
+  return (cents / 100).toFixed(2);
+}
+
+function qdKey(k) {
+  if (k === '.') return; // handled via cents, ignore decimal key press
+  if (_qdRaw.length >= 7) return; // max $99999.99
+  _qdRaw += k;
+  $('qd-display').textContent = qdFormat(_qdRaw);
+}
+
+function qdDel() {
+  _qdRaw = _qdRaw.slice(0, -1);
+  $('qd-display').textContent = qdFormat(_qdRaw);
+}
+
+function qdSave() {
+  const amount = parseFloat(qdFormat(_qdRaw));
+  if (!amount) return toast('Enter the drop amount first', true);
+
+  const platform = $('qd-platform').value;
+  const miles    = parseFloat($('qd-miles').value) || 0;
+  const t        = today();
+
+  // Each quick drop is stored as its own trip with 0 hours
+  // (hours can be updated later via full shift if needed)
+  STORE.addTrip({
+    id: uid(), date: t, platform, miles,
+    earnings: amount, hours: 0,
+    notes: 'Quick drop',
+  });
+
+  buildYearToggle();
+
+  // Reset keypad
+  _qdRaw = '';
+  $('qd-display').textContent = '0.00';
+  $('qd-miles').value = '';
+  $('qd-miles-display').textContent = '—';
+
+  closeQDSheet();
+  renderDropFeed();
+  renderTrips();
+  updateDashboard();
+  updateGoalDisplay();
+  toast(`${fmtMoney(amount)} logged`);
+}
+
+function renderDropFeed() {
+  const feed  = $('drop-feed');
+  const total = $('drop-session-total');
+  const val   = $('drop-session-val');
+  const sub   = $('drop-session-sub');
+  if (!feed) return;
+
+  const t = today();
+  const todayDrops = STORE.trips
+    .filter(tr => tr.date === t)
+    .sort((a, b) => b.id - a.id); // newest first
+
+  if (!todayDrops.length) {
+    feed.innerHTML = `<div class="empty" style="padding:20px 0">
+      <div class="empty-icon" style="font-size:1.8rem">◎</div>
+      <p>Tap + to log your first drop today</p>
+    </div>`;
+    total.style.display = 'none';
+    return;
+  }
+
+  const totalEarned = todayDrops.reduce((s, t) => s + t.earnings, 0);
+  const totalMiles  = todayDrops.reduce((s, t) => s + t.miles, 0);
+
+  feed.innerHTML = todayDrops.map((tr, idx) => {
+    const num = todayDrops.length - idx;
+    return `<div class="drop-item">
+      <div class="drop-num">#${num}</div>
+      <div class="drop-pay">${fmtMoney(tr.earnings)}</div>
+      <div class="drop-info">
+        <span>${tr.platform}</span>
+        ${tr.miles > 0 ? `<span>${tr.miles.toFixed(1)} mi</span>` : ''}
+        ${tr.notes && tr.notes !== 'Quick drop' ? `<span>${tr.notes}</span>` : ''}
+      </div>
+      <button class="drop-del-btn" onclick="confirmDeleteTrip('${tr.id}')">✕</button>
+    </div>`;
+  }).join('');
+
+  total.style.display = 'flex';
+  val.textContent = fmtMoney(totalEarned);
+  sub.textContent = `${todayDrops.length} drop${todayDrops.length !== 1 ? 's' : ''} · ${totalMiles.toFixed(1)} mi`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CSV IMPORTER
+   ═══════════════════════════════════════════════════════ */
+
+// Staged rows waiting for import confirmation
+let _csvRows = [];
+
+function handleCSVUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseCSVText(e.target.result, file.name);
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function parseCSVPaste() {
+  const text = $('csv-paste').value.trim();
+  if (!text) return toast('Paste some CSV data first', true);
+  parseCSVText(text, 'pasted data');
+}
+
+// Pure: parse CSV text into row objects — no DOM, fully testable
+function parseCSV(text, sourceName) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return { error: 'Need at least a header + one data row' };
+
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g,''));
+
+  const COL = {
+    date:     findCol(headers, ['date','deliverydate','completeddate','tripdate','orderdate']),
+    platform: findCol(headers, ['platform','app','service','source']),
+    earnings: findCol(headers, ['earnings','pay','total','amount','totalpay','grossearnings','grossamount','payment']),
+    miles:    findCol(headers, ['miles','distance','mileage','distancemiles','tripmiles']),
+    hours:    findCol(headers, ['hours','duration','time','hoursworked']),
+  };
+
+  if (COL.earnings === -1) return { error: 'Could not find an earnings column — check the CSV format' };
+
+  const platform = detectPlatform(sourceName, text);
+  const rows = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const cols    = splitCSVLine(lines[i]);
+    const earning = parseFloat((cols[COL.earnings] || '').replace(/[$,]/g,'')) || 0;
+    if (!earning) continue;
+
+    const dateRaw = COL.date >= 0 ? cols[COL.date] : '';
+    const date    = parseDate(dateRaw) || today();
+    const miles   = COL.miles >= 0   ? parseFloat(cols[COL.miles]) || 0 : 0;
+    const hours   = COL.hours >= 0   ? parseFloat(cols[COL.hours]) || 0 : 0;
+    const plat    = COL.platform >= 0 ? cols[COL.platform].trim() || platform : platform;
+
+    rows.push({ date, platform: plat, earnings: earning, miles, hours, selected: true });
+  }
+
+  if (!rows.length) return { error: 'No valid earnings rows found in this file' };
+  return { rows };
+}
+
+// Impure: orchestrate parse → preview → toast
+function parseCSVText(text, sourceName) {
+  const result = parseCSV(text, sourceName);
+  if (result.error) return toast(result.error, true);
+  _csvRows = result.rows;
+  renderCSVPreview();
+  toast(`✓ ${_csvRows.length} rows detected from ${sourceName}`);
+}
+
+function findCol(headers, candidates) {
+  for (const c of candidates) {
+    const i = headers.indexOf(c);
+    if (i >= 0) return i;
+  }
+  // fuzzy: partial match
+  for (const c of candidates) {
+    const i = headers.findIndex(h => h.includes(c));
+    if (i >= 0) return i;
+  }
+  return -1;
+}
+
+function splitCSVLine(line) {
+  // Handle quoted fields and "" escaped quotes (RFC 4180)
+  const result = [];
+  let cur = '', inQ = false, i = 0;
+  while (i < line.length) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i += 2; continue; } // escaped ""
+      inQ = !inQ; i++; continue;
+    }
+    if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; i++; continue; }
+    cur += ch; i++;
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function parseDate(raw) {
+  if (!raw) return null;
+  // Try ISO
+  const iso = raw.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return `${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`;
+  // Try M/D/YYYY
+  const mdy = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (mdy) return `${mdy[3]}-${mdy[1].padStart(2,'0')}-${mdy[2].padStart(2,'0')}`;
+  return null;
+}
+
+function detectPlatform(name, text) {
+  const n = name.toLowerCase() + text.substring(0, 200).toLowerCase();
+  if (n.includes('doordash')) return 'DoorDash';
+  if (n.includes('ubereats') || n.includes('uber eats') || n.includes('uber_eats')) return 'Uber Eats';
+  if (n.includes('instacart')) return 'Instacart';
+  if (n.includes('grubhub')) return 'Grubhub';
+  if (n.includes('lyft')) return 'Lyft';
+  if (n.includes('uber')) return 'Uber';
+  if (n.includes('amazon') || n.includes('flex')) return 'Amazon Flex';
+  return 'Other';
+}
+
+function renderCSVPreview() {
+  const preview = $('csv-preview');
+  const rows    = $('csv-preview-rows');
+  const title   = $('csv-preview-title');
+
+  preview.style.display = 'block';
+  title.textContent = `${_csvRows.length} deliveries detected — review before importing`;
+
+  rows.innerHTML = _csvRows.map((r, i) => `
+    <div class="csv-row">
+      <div class="csv-row-check ${r.selected ? 'checked' : ''}" id="csv-chk-${i}"
+        onclick="csvToggleRow(${i})">
+        ${r.selected ? '✓' : ''}
+      </div>
+      <div class="csv-row-date">${r.date}</div>
+      <div class="csv-row-platform">
+        <span class="badge ${PLATFORM_BADGE[r.platform]||'b-sky'}">${r.platform}</span>
+      </div>
+      <div class="csv-row-pay">${fmtMoney(r.earnings)}</div>
+      <div class="csv-row-miles">${r.miles > 0 ? r.miles.toFixed(1)+' mi' : '—'}</div>
+      <div class="csv-row-miles">${r.hours > 0 ? r.hours.toFixed(1)+' hr' : '—'}</div>
+    </div>`).join('');
+}
+
+function csvToggleRow(i) {
+  _csvRows[i].selected = !_csvRows[i].selected;
+  const el = $('csv-chk-' + i);
+  el.classList.toggle('checked', _csvRows[i].selected);
+  el.textContent = _csvRows[i].selected ? '✓' : '';
+}
+
+function csvSelectAll(val) {
+  _csvRows.forEach((r, i) => {
+    r.selected = val;
+    const el = $('csv-chk-' + i);
+    if (el) { el.classList.toggle('checked', val); el.textContent = val ? '✓' : ''; }
+  });
+}
+
+function importCSVRows() {
+  const toImport = _csvRows.filter(r => r.selected);
+  if (!toImport.length) return toast('No rows selected', true);
+
+  // Dedupe check — skip rows that match existing date+platform+earnings
+  const existing = new Set(STORE.trips.map(t => `${t.date}|${t.platform}|${t.earnings}`));
+  let added = 0, skipped = 0;
+
+  toImport.forEach(r => {
+    const key = `${r.date}|${r.platform}|${r.earnings}`;
+    if (existing.has(key)) { skipped++; return; }
+    STORE.addTrip({ id: uid(), date: r.date, platform: r.platform,
+      miles: r.miles, earnings: r.earnings, hours: r.hours, notes: 'CSV import' });
+    existing.add(key);
+    added++;
+  });
+
+  buildYearToggle(); // CSV may introduce new years
+  renderTrips();
+  syncTaxTrackingFromExpenses();
+  updateDashboard();
+  updateGoalDisplay();
+  _csvRows = [];
+  $('csv-preview').style.display = 'none';
+  $('csv-paste').value = '';
+
+  toast(`✓ ${added} deliveries imported${skipped ? ` · ${skipped} dupes skipped` : ''}`);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TRIPS
+   ═══════════════════════════════════════════════════════ */
+function addTrip() {
+  const date     = $('t-date').value;
+  const platform = $('t-platform').value;
+  const miles    = parseFloat($('t-miles').value)    || 0;
+  const earnings = parseFloat($('t-earnings').value) || 0;
+  const hours    = parseFloat($('t-hours').value)    || 0;
+  const notes    = $('t-notes').value.trim();
+
+  if (!date)     return toast('Please select a date', true);
+  if (!earnings) return toast('Please enter your earnings', true);
+
+  STORE.addTrip({ id: uid(), date, platform, miles, earnings, hours, notes });
+  buildYearToggle(); // new year trip auto-adds toggle button
+  renderTrips();
+  updateDashboard();
+  updateGoalDisplay();
+  clearTripForm();
+  toast('✓ Trip logged');
+}
+
+function clearTripForm() {
+  $('t-date').value = today();
+  $('t-miles').value = $('t-earnings').value = $('t-hours').value = $('t-notes').value = '';
+}
+
+let _lastDeletedTrip = null;
+
+function confirmDeleteTrip(id) {
+  // Soft delete with undo — Nielsen error prevention
+  const trip = STORE.trips.find(t => t.id === id);
+  if (!trip) return;
+  STORE.deleteTrip(id);
+  renderTrips(); renderDropFeed(); updateDashboard(); updateGoalDisplay();
+
+  // Undo toast
+  const el = $('toast');
+  el.innerHTML = `Removed ${fmtMoney(trip.earnings)} drop &nbsp; <span onclick="undoDeleteTrip()" style="text-decoration:underline;cursor:pointer;color:var(--lime)">Undo</span>`;
+  el.className = 'toast show';
+  _lastDeletedTrip = trip;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => {
+    el.innerHTML = '';
+    el.classList.remove('show');
+    _lastDeletedTrip = null;
+  }, 4000);
+}
+
+function undoDeleteTrip() {
+  if (!_lastDeletedTrip) return;
+  STORE.addTrip(_lastDeletedTrip);
+  _lastDeletedTrip = null;
+  renderTrips(); renderDropFeed(); updateDashboard(); updateGoalDisplay();
+  toast('Restored');
+}
+
+function deleteTrip(id) {
+  confirmDeleteTrip(id);
+}
+
+const PLATFORM_BADGE = {
+  'DoorDash':    'b-rose',
+  'Uber Eats':   'b-lime',
+  'Instacart':   'b-amber',
+  'Grubhub':     'b-violet',
+  'Lyft':        'b-violet',
+  'Uber':        'b-sky',
+  'Amazon Flex': 'b-amber',
+};
+
+function renderTrips() {
+  const tbody = $('trips-tbody');
+  const yearTrips = STORE.tripsForYear;
+  if (!yearTrips.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⬡</div><p>No trips logged for ${_activeTaxYear} yet</p></div></td></tr>`;
+    return;
+  }
+
+  const sorted = [...yearTrips].sort((a, b) => b.date.localeCompare(a.date));
+  tbody.innerHTML = sorted.map(t => {
+    const gph    = t.hours > 0 ? (t.earnings / t.hours) : null;
+    const opCost = t.miles * TAX.OPERATING_COST_PER_MILE;
+    const taxCost = t.earnings * TAX.EFFECTIVE_RATE;
+    const netHr  = (t.hours > 0) ? ((t.earnings - opCost - taxCost) / t.hours) : null;
+    const bClass = PLATFORM_BADGE[t.platform] || 'b-sky';
+    return `<tr>
+      <td class="mono" style="font-size:0.78rem">${t.date}</td>
+      <td><span class="badge ${bClass}">${t.platform}</span></td>
+      <td class="mono">${t.miles.toFixed(1)}</td>
+      <td class="mono" style="color:var(--lime)">${fmtMoney(t.earnings)}</td>
+      <td class="mono">${t.hours > 0 ? t.hours : '—'}</td>
+      <td class="mono">${gph !== null ? fmtMoney(gph) : '—'}</td>
+      <td class="mono" style="color:var(--amber)">${netHr !== null ? fmtMoney(netHr) : '—'}</td>
+      <td style="white-space:nowrap;display:flex;gap:4px">
+        <button class="btn btn-ghost" style="padding:5px 9px;font-size:0.7rem" onclick="openEditDrawer('${t.id}')">Edit</button>
+        <button class="btn btn-rose" onclick="confirmDeleteTrip('${t.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   EXPENSES
+   ═══════════════════════════════════════════════════════ */
+// Holds the pending receipt dataUrl before the expense is saved
+let _pendingReceipt = null;
+
+function previewReceipt(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    _pendingReceipt = e.target.result;
+    $('e-receipt-img').src = _pendingReceipt;
+    $('e-receipt-preview').style.display = 'block';
+    $('e-receipt-text').textContent = file.name.length > 22 ? file.name.slice(0,20)+'…' : file.name;
+    $('e-receipt-label').classList.add('has-file');
+    $('e-receipt-clear').style.display = 'inline';
+    if (STORE.storageWarning()) toast('Storage nearly full — receipt may not save', true);
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearReceiptAttachment(evt) {
+  evt.preventDefault();
+  evt.stopPropagation();
+  _pendingReceipt = null;
+  $('e-receipt').value = '';
+  $('e-receipt-img').src = '';
+  $('e-receipt-preview').style.display = 'none';
+  $('e-receipt-text').textContent = 'Attach receipt';
+  $('e-receipt-label').classList.remove('has-file');
+  $('e-receipt-clear').style.display = 'none';
+}
+
+function addExpense() {
+  const date   = $('e-date').value;
+  const cat    = $('e-cat').value;
+  const amount = parseFloat($('e-amount').value) || 0;
+  const vendor = $('e-vendor').value.trim();
+
+  if (!date)   return toast('Please select a date', true);
+  if (!amount) return toast('Please enter an amount', true);
+
+  STORE.addExpense({ id: uid(), date, cat, amount, vendor, receipt: _pendingReceipt || null });
+  if (cat === 'Gas') markGasDirty();
+  renderExpenses();
+  syncTaxTrackingFromExpenses();
+  updateDashboard();
+  clearExpenseForm();
+  toast('✓ Expense added' + (_pendingReceipt ? ' with receipt' : ''));
+}
+
+function clearExpenseForm() {
+  $('e-date').value = today();
+  $('e-amount').value = $('e-vendor').value = '';
+  clearReceiptAttachment({ preventDefault:()=>{}, stopPropagation:()=>{} });
+}
+
+let _lastDeletedExpense = null;
+
+function confirmDeleteExpense(id) {
+  const exp = STORE.expenses.find(e => e.id === id);
+  if (!exp) return;
+  if (exp.cat === 'Gas') markGasDirty();
+  STORE.deleteExpense(id);
+  renderExpenses();
+  syncTaxTrackingFromExpenses();
+  updateDashboard();
+
+  _lastDeletedExpense = exp;
+  const el = $('toast');
+  el.innerHTML = `Removed ${exp.cat} &nbsp; <span onclick="undoDeleteExpense()" style="text-decoration:underline;cursor:pointer;color:var(--lime)">Undo</span>`;
+  el.className = 'toast show';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => {
+    el.innerHTML = ''; el.classList.remove('show');
+    _lastDeletedExpense = null;
+  }, 4000);
+}
+
+function undoDeleteExpense() {
+  if (!_lastDeletedExpense) return;
+  STORE.addExpense(_lastDeletedExpense);
+  _lastDeletedExpense = null;
+  renderExpenses(); syncTaxTrackingFromExpenses(); updateDashboard();
+  toast('Restored');
+}
+
+function deleteExpense(id) { confirmDeleteExpense(id); }
+
+function renderExpenses() {
+  const tbody = $('expenses-tbody');
+  const yearExpenses = STORE.expensesForYear;
+  if (!yearExpenses.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="empty-icon">◉</div><p>No expenses logged for ${_activeTaxYear} yet</p></div></td></tr>`;
+    return;
+  }
+  const sorted = [...yearExpenses].sort((a, b) => b.date.localeCompare(a.date));
+  tbody.innerHTML = sorted.map(e => {
+    const saved = e.amount * TAX.EFFECTIVE_RATE;
+    const receiptCell = e.receipt
+      ? `<td><img class="exp-thumb" src="${e.receipt}" alt="receipt" onclick="openLightbox('${e.id}')"></td>`
+      : `<td><span style="font-size:0.68rem;color:var(--text3);font-family:'Space Mono',monospace">—</span></td>`;
+    return `<tr>
+      <td class="mono" style="font-size:0.78rem">${e.date}</td>
+      <td><span class="badge b-amber">${e.cat}</span></td>
+      <td style="color:var(--text2)">${e.vendor || '—'}</td>
+      <td class="mono" style="color:var(--rose)">-${fmtMoney(e.amount)}</td>
+      <td class="mono" style="color:var(--lime)">+${fmtMoney(saved)}</td>
+      ${receiptCell}
+      <td><button class="btn btn-rose" onclick="confirmDeleteExpense('${e.id}')">✕</button></td>
+    </tr>`;
+  }).join('');
+  renderExpenseChart();
+}
+
+function openLightbox(expenseId) {
+  const expense = STORE.expenses.find(e => String(e.id) === String(expenseId));
+  if (!expense || !expense.receipt) return;
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.innerHTML = `
+    <button class="lightbox-close" onclick="this.parentElement.remove()">✕</button>
+    <img src="${expense.receipt}" alt="Receipt">`;
+  lb.addEventListener('click', e => { if (e.target === lb) lb.remove(); });
+  document.body.appendChild(lb);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCREENSHOTS
+   ═══════════════════════════════════════════════════════ */
+function handleUpload(event) {
+  if (STORE.storageWarning()) {
+    $('storage-warn').style.display = 'block';
+    toast('Storage nearly full — delete old screenshots first', true);
+    return;
+  }
+  const cat  = $('ss-cat').value;
+  const date = $('ss-date').value || today();
+
+  Array.from(event.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      STORE.addScreenshot({ id: uid(), cat, date, name: file.name, dataUrl: e.target.result });
+      renderScreenshots();
+      if (STORE.storageWarning()) $('storage-warn').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+  toast('✓ Receipt saved');
+  event.target.value = '';
+}
+
+function deleteScreenshot(id) {
+  STORE.deleteScreenshot(id);
+  renderScreenshots();
+  $('storage-warn').style.display = STORE.storageWarning() ? 'block' : 'none';
+  toast('Screenshot removed');
+}
+
+function renderScreenshots() {
+  const grid = $('ss-grid');
+  if (!STORE.screenshots.length) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">📸</div><p>No receipts stored yet</p></div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="ss-grid">${STORE.screenshots.map(s => `
+    <div class="ss-item">
+      <img src="${s.dataUrl}" alt="${s.cat}">
+      <button class="ss-del" onclick="deleteScreenshot(${s.id})">✕</button>
+      <div class="ss-cap">${s.cat} · ${s.date}</div>
+    </div>`).join('')}</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD
+   ═══════════════════════════════════════════════════════ */
+function updateDashboard() {
+  const c = TAX.calculate(STORE.tripsForYear, STORE.expensesForYear);
+
+  $('d-gross').textContent       = fmtMoney(c.gross);
+  $('d-tax').textContent         = fmtMoney(c.totalTax);
+  $('d-deductions').textContent  = fmtMoney(c.totalDeductions);
+  $('d-net').textContent         = fmtMoney(Math.max(0, c.netAfterTax));
+  $('d-miles').textContent       = fmtInt(c.totalMiles);
+  $('d-miles-sub').textContent   = `= ${fmtMoney(c.mileDeduction)} deduction`;
+  $('d-nethr').textContent       = c.avgNetPerHr !== null ? fmtMoney(c.avgNetPerHr) : '—';
+
+  // Header net
+  $('hdr-net').textContent = `${fmtMoney(Math.max(0, c.netAfterTax))} net`;
+
+  // Compute today stats once — shared by hero display and goal display
+  const td = computeTodayStats();
+  renderTodayHero(td);
+
+  // Quarterly
+  const quarterly = c.totalTax / 4;
+  const pct = c.gross > 0 ? Math.min(100, (c.totalTax / c.gross) * 100) : 0;
+  $('d-quarterly').textContent = fmtMoney(quarterly);
+  $('d-qbar').style.width      = pct + '%';
+  $('d-qpct').textContent      = pct.toFixed(1) + '% of earnings';
+  $('d-deadline').textContent  = nextDeadline();
+
+  buildInsights(c);
+  renderEarningsChart();
+  renderGasImpact();
+  updateGoalDisplay(c, td);
+  updateExport();
+}
+
+function buildInsights(c) {
+  const box = $('insights-box');
+  const yearTrips = STORE.tripsForYear;
+  if (!yearTrips.length) {
+    box.innerHTML = `<div class="empty"><div class="empty-icon">⬡</div><p>Log your first trip for ${_activeTaxYear} to see insights</p></div>`;
+    return;
+  }
+
+  const insights = [];
+
+  // Net per hour
+  if (c.avgNetPerHr !== null) {
+    const color = c.avgNetPerHr >= 15 ? 'lime' : c.avgNetPerHr >= 10 ? 'amber' : 'rose';
+    insights.push({ color, icon: '⏱️', html: `Your avg take-home is <strong>${fmtMoney(c.avgNetPerHr)}/hr</strong> after taxes and vehicle costs across <strong>${c.totalHours.toFixed(1)} hours</strong> logged.` });
+  }
+
+  // Mileage
+  if (c.totalMiles > 0) {
+    insights.push({ color:'sky', icon:'📍', html:`<strong>${fmtInt(c.totalMiles)} miles</strong> driven for work = <strong>${fmtMoney(c.mileDeduction)}</strong> tax deduction at the ${TAX.activeYear} rate of ${(TAX.MILEAGE_RATE*100).toFixed(1)}¢/mile.` });
+  }
+
+  // Top platform
+  const byPlatform = yearTrips.reduce((acc, t) => {
+    acc[t.platform] = (acc[t.platform] || 0) + t.earnings; return acc;
+  }, {});
+  const top = Object.entries(byPlatform).sort((a,b) => b[1]-a[1])[0];
+  if (top) {
+    insights.push({ color:'lime', icon:'🏆', html:`<strong>${top[0]}</strong> is your highest-earning platform at <strong>${fmtMoney(top[1])}</strong>. Prioritize it during peak windows.` });
+  }
+
+  // Tax warning
+  if (c.gross > 2000) {
+    const pct = (c.totalTax / c.gross * 100).toFixed(0);
+    insights.push({ color:'amber', icon:'⚠️', html:`Set aside <strong>${fmtMoney(c.totalTax)}</strong> (${pct}% of gross) for taxes. Next quarterly estimated payment due <strong>${nextDeadline()}</strong>.` });
+  }
+
+  // Deduction miss
+  if (c.expenseTotal < 500 && c.gross > 2000) {
+    insights.push({ color:'rose', icon:'💡', html:`You've logged very few expenses. Remember: gas, phone, maintenance, and insurance are all deductible. Every $100 in expenses saves ~$28 in taxes.` });
+  }
+
+  box.innerHTML = insights.map(i => `
+    <div class="insight ${i.color}">
+      <div class="insight-icon">${i.icon}</div>
+      <div class="insight-text">${i.html}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   DAILY GOAL SETTER
+   ═══════════════════════════════════════════════════════ */
+const GOAL_KEY = 'gigtrack_daily_goal';
+
+function saveGoal(val) {
+  localStorage.setItem(GOAL_KEY, parseFloat(val) || 0);
+}
+
+function loadGoal() {
+  return parseFloat(localStorage.getItem(GOAL_KEY)) || 0;
+}
+
+// Pure: compute today stats — single calculation, shared by hero + goal display
+function computeTodayStats() {
+  const t = today();
+  const todayTrips = STORE.trips.filter(tr => tr.date === t);
+  const gross = todayTrips.reduce((s, tr) => s + tr.earnings, 0);
+  const miles = todayTrips.reduce((s, tr) => s + tr.miles, 0);
+  const hrs   = todayTrips.reduce((s, tr) => s + tr.hours, 0);
+  const netHr = hrs > 0
+    ? (gross - miles * TAX.OPERATING_COST_PER_MILE - gross * TAX.EFFECTIVE_RATE) / hrs
+    : null;
+  return { todayTrips, gross, miles, hrs, netHr };
+}
+
+// Impure: render today hero DOM — only called from updateDashboard
+function renderTodayHero(td) {
+  const todayEl = $('d-today-date');
+  if (todayEl) todayEl.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const teEl = $('d-today-earned');
+  if (teEl) teEl.textContent = fmtMoney(td.gross);
+  const chartPeriodEl = $('chart-period-label');
+  if (chartPeriodEl) chartPeriodEl.textContent = (_activeTaxYear === new Date().getFullYear()) ? 'Last 8 Weeks' : _activeTaxYear + ' by Month';
+  const dropsEl  = $('d-today-drops');
+  const milesEl  = $('d-today-miles');
+  const nethrEl  = $('d-today-nethr');
+  const remainEl = $('d-today-remain');
+  if (dropsEl)  dropsEl.textContent  = td.todayTrips.length;
+  if (milesEl)  milesEl.textContent  = td.miles.toFixed(1);
+  if (nethrEl)  nethrEl.textContent  = td.netHr !== null ? fmtMoney(td.netHr) : '—';
+  const goal = loadGoal();
+  if (remainEl) remainEl.textContent = goal > 0 ? fmtMoney(Math.max(0, goal - td.gross)) : '—';
+}
+
+// Accepts pre-computed c (tax calc) and td (today stats) from updateDashboard.
+// Falls back to recalculating if called standalone (e.g. from goal input change).
+function updateGoalDisplay(c, td) {
+  const goal      = loadGoal();
+  const goalInput = $('goal-amount');
+  const bar       = $('goal-bar');
+  const line1     = $('goal-line1');
+  const line2     = $('goal-line2');
+  const pctLabel  = $('goal-pct-label');
+
+  if (!goalInput) return;
+  if (!goalInput.value && goal > 0) goalInput.value = goal;
+
+  if (!goal) {
+    if (line1)    line1.textContent    = 'Set a daily goal';
+    if (pctLabel) pctLabel.textContent = '';
+    if (bar)      bar.style.width      = '0%';
+    return;
+  }
+
+  // Use pre-computed today stats if available, else compute once
+  const todayGross = td ? td.gross : computeTodayStats().gross;
+  const todayHrs   = td ? td.hrs   : computeTodayStats().hrs;
+  const pct        = Math.min(100, (todayGross / goal) * 100);
+  const remain     = Math.max(0, goal - todayGross);
+
+  // Avg hrs rate from year trips for hours-to-goal estimate
+  const yearTrips  = STORE.tripsForYear;
+  const totalHrs   = yearTrips.reduce((s, t) => s + t.hours, 0);
+  const totalGross = yearTrips.reduce((s, t) => s + t.earnings, 0);
+  const avgGrossHr = totalHrs > 0 ? totalGross / totalHrs : 0;
+  const hrsNeeded  = (avgGrossHr > 0 && remain > 0) ? remain / avgGrossHr : null;
+
+  if (bar)      bar.style.width      = pct + '%';
+  if (pctLabel) pctLabel.textContent = Math.round(pct) + '%';
+
+  if (pct >= 100) {
+    if (line1) line1.textContent = 'Goal reached — ' + fmtMoney(todayGross) + ' today';
+    if (line2) line2.textContent = todayHrs > 0
+      ? todayHrs.toFixed(1) + ' hrs · ' + fmtMoney(todayGross / todayHrs) + '/hr'
+      : '';
+  } else {
+    if (line1) line1.textContent = fmtMoney(todayGross) + ' of ' + fmtMoney(goal) + ' today';
+    if (line2) line2.textContent = hrsNeeded !== null
+      ? '~' + hrsNeeded.toFixed(1) + ' hrs to go'
+      : fmtMoney(remain) + ' to go';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GAS IMPACT PANEL
+   ═══════════════════════════════════════════════════════ */
+let _gasImpactDirty = true;  // set true whenever gas expenses change
+
+function markGasDirty() { _gasImpactDirty = true; }
+
+function renderGasImpact() {
+  if (!_gasImpactDirty) return;
+  _gasImpactDirty = false;
+  const body = $('gas-impact-body');
+  if (!body) return;
+
+  // Get all gas expenses grouped by month
+  const gasExpenses = STORE.expensesForYear.filter(e => e.cat === 'Gas');
+  if (!gasExpenses.length) {
+    body.innerHTML = `<div class="empty" style="padding:28px 0">
+      <div class="empty-icon">⛽</div>
+      <p>Log gas expenses to see how fuel costs are eating into your profits</p>
+    </div>`;
+    return;
+  }
+
+  // Build month buckets for both earnings and gas
+  const monthData = Array.from({length:12}, (_, mi) => {
+    const gross = STORE.tripsForYear
+      .filter(t => new Date(t.date+'T00:00:00').getMonth() === mi)
+      .reduce((s,t) => s + t.earnings, 0);
+    const gas = gasExpenses
+      .filter(e => new Date(e.date+'T00:00:00').getMonth() === mi)
+      .reduce((s,e) => s + e.amount, 0);
+    const net = gross - gas;
+    const pct = gross > 0 ? (gas / gross * 100) : 0;
+    return { gross, gas, net, pct };
+  });
+
+  // Only render months that have any data
+  const activeMonths = monthData
+    .map((d, i) => ({ ...d, i }))
+    .filter(d => d.gross > 0 || d.gas > 0);
+
+  if (!activeMonths.length) {
+    body.innerHTML = `<div class="empty" style="padding:28px 0">
+      <div class="empty-icon">⛽</div>
+      <p>No matching trip and gas data yet</p>
+    </div>`;
+    return;
+  }
+
+  const maxGross = Math.max(...activeMonths.map(d => d.gross), 1);
+
+  // Summary line
+  const totalGas   = gasExpenses.reduce((s,e) => s+e.amount, 0);
+  const totalGross = STORE.tripsForYear.reduce((s,t) => s+t.earnings, 0);
+  const avgGasPct  = totalGross > 0 ? (totalGas / totalGross * 100).toFixed(1) : 0;
+  const impactColor = avgGasPct > 20 ? 'var(--rose)' : avgGasPct > 10 ? 'var(--amber)' : 'var(--lime)';
+
+  const summaryHTML = `
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border)">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--text3);margin-bottom:3px">Total Gas Spent</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;color:var(--rose)">-${fmtMoney(totalGas)}</div>
+      </div>
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--text3);margin-bottom:3px">Avg % of Gross</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;color:${impactColor}">${avgGasPct}%</div>
+      </div>
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--text3);margin-bottom:3px">Gross After Gas</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;color:var(--lime)">${fmtMoney(totalGross - totalGas)}</div>
+      </div>
+      <div style="flex:1;display:flex;align-items:center">
+        <div style="font-size:0.75rem;color:var(--text3);line-height:1.5">
+          ${avgGasPct > 20
+            ? '🔴 Gas is taking <strong style="color:var(--rose)">over 20%</strong> of your gross. Consider standard mileage deduction instead.'
+            : avgGasPct > 10
+            ? '🟡 Gas is a significant cost. Track closely and compare vs standard mileage.'
+            : '🟢 Gas cost is healthy relative to earnings.'}
+        </div>
+      </div>
+    </div>`;
+
+  const cellsHTML = activeMonths.map(d => {
+    const pctClass = d.pct > 20 ? 'high' : d.pct > 10 ? 'mid' : 'low';
+    const fillColor = d.pct > 20 ? 'var(--rose)' : d.pct > 10 ? 'var(--amber)' : 'var(--lime)';
+    const barWidth = d.gross > 0 ? Math.min(100, (d.gas / d.gross) * 100) : 0;
+    return `
+      <div class="gas-month-cell">
+        <div class="gas-month-name">${MONTHS[d.i]}</div>
+        <div class="gas-month-pct ${pctClass}">${d.pct.toFixed(0)}%</div>
+        <div class="gas-month-sub">of gross</div>
+        <div class="gas-bar"><div class="gas-bar-fill" style="width:${barWidth}%;background:${fillColor}"></div></div>
+        <div class="gas-month-sub" style="margin-top:4px">-${fmtMoney(d.gas)}</div>
+      </div>`;
+  }).join('');
+
+  body.innerHTML = summaryHTML + `<div class="gas-month-grid">${cellsHTML}</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHARTS — Canvas bar charts, no dependencies
+   ═══════════════════════════════════════════════════════ */
+function drawBarChart(canvasId, labels, values, color = '#c8ff00', secondaryColor = null) {
+  const canvas = $(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width  = rect.width  + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 16, right: 16, bottom: 32, left: 50 };
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const max = Math.max(...values, 1);
+  const barW = chartW / values.length;
+  const barPad = barW * 0.18;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + chartH - (i / 4) * chartH;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + chartW, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(144,144,176,0.5)';
+    ctx.font = `400 9px Space Mono, monospace`;
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + fmtInt((max * i / 4)), pad.left - 6, y + 3);
+  }
+
+  // Bars
+  values.forEach((v, i) => {
+    const x  = pad.left + i * barW + barPad;
+    const bw = barW - barPad * 2;
+    const bh = (v / max) * chartH;
+    const y  = pad.top + chartH - bh;
+
+    // Bar glow
+    if (v > 0) {
+      const grd = ctx.createLinearGradient(0, y, 0, y + bh);
+      grd.addColorStop(0, color);
+      grd.addColorStop(1, color + '44');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.roundRect(x, y, bw, bh, [4, 4, 0, 0]);
+      ctx.fill();
+    }
+
+    // Label
+    ctx.fillStyle = 'rgba(144,144,176,0.7)';
+    ctx.font = `500 9px Space Mono, monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[i], pad.left + i * barW + barW / 2, H - 8);
+  });
+}
+
+function renderEarningsChart() {
+  // For current year: trailing 8 weeks from today
+  // For past years: full 12-month breakdown
+  const yearTrips = STORE.tripsForYear;
+  const isCurrentYear = _activeTaxYear === new Date().getFullYear();
+
+  if (isCurrentYear) {
+    const now = new Date();
+    const weeks = Array.from({ length: 8 }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (7 * (7 - i)));
+      return d;
+    });
+    const labels = weeks.map(d => `${d.getMonth()+1}/${d.getDate()}`);
+    const values = weeks.map((wStart, i) => {
+      const wEnd = i < 7 ? weeks[i + 1] : new Date(now.getTime() + 86400000 * 7);
+      return yearTrips
+        .filter(t => { const td = new Date(t.date + 'T00:00:00'); return td >= wStart && td < wEnd; })
+        .reduce((s, t) => s + t.earnings, 0);
+    });
+    drawBarChart('earnings-chart', labels, values, '#c8ff00');
+  } else {
+    // Past year: show all 12 months
+    const labels = MONTHS;
+    const values = MONTHS.map((_, mi) =>
+      yearTrips
+        .filter(t => new Date(t.date + 'T00:00:00').getMonth() === mi)
+        .reduce((s, t) => s + t.earnings, 0)
+    );
+    drawBarChart('earnings-chart', labels, values, '#c8ff00');
+  }
+}
+
+function renderExpenseChart() {
+  const catTotals = STORE.expensesForYear.reduce((acc, e) => {
+    acc[e.cat] = (acc[e.cat] || 0) + e.amount; return acc;
+  }, {});
+  const sorted = Object.entries(catTotals).sort((a,b) => b[1]-a[1]).slice(0, 7);
+  const labels = sorted.map(([k]) => k.split(' ')[0]);
+  const values = sorted.map(([,v]) => v);
+  drawBarChart('expense-chart', labels, values, '#ffb340');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAX GUIDE ACCORDIONS
+   ═══════════════════════════════════════════════════════ */
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const TAX_ITEMS = [
+  {
+    key:'gas', icon:'⛽', title:'Gas & Fuel', badge:'Actual method only', bClass:'b-amber', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Gas is deductible only if you use the actual expense method instead of standard mileage. Track what you spend monthly so you can compare both methods at year end.`,
+    tip:`Use the What-If calculator to see whether standard mileage or actual expenses saves you more.`
+  },
+  {
+    key:'phone', icon:'📱', title:'Phone & Data Plan', badge:'50–80% deductible', bClass:'b-sky', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Your cell phone and data plan are deductible for the percentage used for business — navigation, app usage, customer contact. Enter your full monthly bill; GigTrack will remind you to apply your business-use percentage at tax time.`,
+    tip:`$100/month bill at 70% business use = $840/year deduction. Screenshot your bill monthly.`
+  },
+  {
+    key:'insurance', icon:'🛡️', title:'Vehicle Insurance', badge:'Actual method only', bClass:'b-violet', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Auto insurance is deductible under the actual expense method, prorated by business-use percentage. Track your monthly premium here.`,
+    tip:`$1,800/year insurance at 80% business use = $1,440 deduction.`
+  },
+  {
+    key:'maintenance', icon:'🔧', title:'Car Maintenance', badge:'Oil, tires, repairs', bClass:'b-amber', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Oil changes, tire rotations, brake pads, car washes — all deductible under the actual expense method. Log each month you have a service or repair. Irregular? Leave that month $0.`,
+    tip:`Keep every receipt. Even a $15 car wash is deductible when you're driving for work.`
+  },
+  {
+    key:'parking', icon:'🅿️', title:'Parking & Tolls', badge:'100% — any method', bClass:'b-lime', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Parking fees and tolls are fully deductible even if you use the standard mileage rate. This is one of the few vehicle costs you can claim on top of the mileage deduction.`,
+    tip:`$5/day × 250 work days = $1,250 you're likely missing. Log it monthly.`
+  },
+  {
+    key:'health', icon:'❤️', title:'Health Insurance Premiums', badge:'100% if self-employed', bClass:'b-rose', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`If you pay your own health insurance (not covered by a spouse's plan), enter your monthly premium here. You can deduct 100% including dental and vision — it reduces your adjusted gross income before anything else.`,
+    tip:`$500/month = $6,000/year off your taxable income. One of the most powerful deductions available.`
+  },
+  {
+    key:'sepira', icon:'🏦', title:'SEP-IRA Contributions', badge: () => `Max $${(TAX.SEP_IRA_MAX).toLocaleString()} in ${TAX.activeYear}`, bClass:'b-violet', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Track how much you contribute to your SEP-IRA each month. Contributions are deductible dollar-for-dollar and reduce your taxable income. 2025 max: $70,000 (25% of net). 2026 max rises to $72,000.`,
+    tip:`$5,000 contributed = ~$1,400 saved in taxes while building retirement wealth. 2025 limit: $70,000 · 2026 limit: $72,000.`
+  },
+  {
+    key:'equipment', icon:'🎒', title:'Equipment & Supplies', badge:'Hot bags, mounts, etc.', bClass:'b-amber', tracked:true,
+    unit:'$', placeholder:'0.00',
+    body:`Insulated delivery bags, phone mounts, car chargers, dash cams — log equipment purchases the month you buy them. These are one-time costs so most months will be $0.`,
+    tip:`Small items add up: $200–$600/year is common for active gig workers.`
+  },
+  {
+    key:'mileage', icon:'🚗', title:'Standard Mileage Rate',
+    badge: () => `${(TAX.MILEAGE_RATE * 100).toFixed(1)}¢/mile — ${TAX.activeYear}`,
+    bClass:'b-lime', tracked:false,
+    body: () => `The IRS allows you to deduct ${(TAX.MILEAGE_RATE * 100).toFixed(1)} cents per mile driven for business in ${TAX.activeYear}. This covers gas, wear and tear, oil changes, and depreciation all in one number. GigTrack calculates this automatically from your trip log — no manual tracking needed here.`,
+    tip: () => `${TAX.activeYear === 2026 ? '15,000 miles × 72.5¢ = $10,875 deduction.' : '15,000 miles × 70¢ = $10,500 deduction.'} Your running total is always on the Dashboard.`
+  },
+  {
+    key:'se-deduction', icon:'🛡️', title:'Self-Employment Tax Deduction', badge:'Auto — 50% of SE tax', bClass:'b-violet', tracked:false,
+    body:`You pay SE tax (15.3%) on net earnings, but the IRS lets you deduct half of it automatically — no manual tracking needed. GigTrack factors this into every tax estimate.`,
+    tip:`On $40,000 net profit, SE tax ≈ $5,652. You automatically deduct $2,826, saving ~$339 in income tax.`
+  },
+  {
+    key:'qbi', icon:'💼', title:'QBI Deduction (20% of net)', badge:'Up to 20% off taxable income', bClass:'b-lime', tracked:false,
+    body:`The Qualified Business Income deduction lets most gig workers deduct up to 20% of net business income. Calculated at tax time — no monthly tracking needed, but the more expenses you log, the larger this deduction gets.`,
+    tip:`On $30,000 net profit, that's potentially $6,000 off your taxable income.`
+  },
+  {
+    key:'schedule-c', icon:'📋', title:'Schedule C & Schedule SE', badge:'How gig income is filed', bClass:'b-sky', tracked:false,
+    body:`Report gig income on Schedule C (Profit or Loss from Business). Net profit flows to Schedule SE for SE tax. Both attach to Form 1040. You receive 1099-NEC from platforms that paid you $600+, not a W-2.`,
+    tip:`Keep GigTrack data all year so Schedule C takes minutes at tax time, not hours.`
+  },
+  {
+    key:'quarterly', icon:'📅', title:'Quarterly Estimated Taxes', badge: () => `${TAX.activeYear} — file in ${TAX.config.FILE_YEAR}`, bClass:'b-rose', tracked:false,
+    body:`If you expect to owe $1,000+ in taxes, pay quarterly estimates or face a penalty. 2025 deadlines: April 15, June 16, September 15, January 15 (2026). Pay via IRS Direct Pay — free, no account needed.`,
+    tip:`The simplest rule: set aside 28% of every gig payment into a separate savings account immediately.`
+  },
+];
+
+function resolveProp(prop) {
+  // Supports both static strings and dynamic functions in TAX_ITEMS
+  return typeof prop === 'function' ? prop() : prop;
+}
+
+function buildTaxGuide() {
+  // Update page title dynamically
+  const titleEl = $('taxguide-title');
+  if (titleEl) titleEl.innerHTML = `${TAX.activeYear} GIG WORKER <em>TAX GUIDE</em>`;
+
+  // Update banner spans
+  const cfg = TAX.config;
+  const bannerMiles  = $('tg-banner-miles');
+  const bannerStdDed = $('tg-banner-stdded');
+  const bannerSEP    = $('tg-banner-sep');
+  const bannerFile   = $('tg-banner-file');
+  if (bannerMiles)  bannerMiles.textContent  = (cfg.MILEAGE_RATE * 100).toFixed(1) + '¢/mile';
+  if (bannerStdDed) bannerStdDed.textContent = '$' + cfg.STD_DEDUCTION.single.toLocaleString();
+  if (bannerSEP)    bannerSEP.textContent    = '$' + cfg.SEP_IRA_MAX.toLocaleString();
+  if (bannerFile)   bannerFile.textContent   = 'filed in ' + cfg.FILE_YEAR;
+
+  $('tax-accordions').innerHTML = TAX_ITEMS.map((item, i) => {
+    const badge       = resolveProp(item.badge);
+    const body        = resolveProp(item.body);
+    const tip         = resolveProp(item.tip);
+    const trackerHTML = item.tracked ? buildTracker(item) : '';
+    return `
+    <div class="tax-item">
+      <div class="tax-hdr" onclick="toggleTax(${i})">
+        <div class="tax-hdr-left">
+          <span style="font-size:1.1rem">${item.icon}</span>
+          <span class="tax-hdr-title">${item.title}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${item.tracked ? `<span class="badge b-lime" id="ytd-badge-${item.key}">YTD $0</span>` : ''}
+          <span class="badge ${item.bClass}">${badge}</span>
+          <span class="chev" id="chev-${i}">▾</span>
+        </div>
+      </div>
+      <div class="tax-body" id="tbody-${i}">
+        <p>${body}</p>
+        <div class="tax-callout">💡 ${tip}</div>
+        ${trackerHTML}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Populate saved tracker values
+  TAX_ITEMS.filter(it => it.tracked).forEach(item => {
+    const months = STORE.getTaxMonths(item.key);
+    months.forEach((val, mi) => {
+      const el = $(`tx-${item.key}-${mi}`);
+      if (el && val) {
+        el.value = val;
+        el.classList.add('has-value');
+      }
+    });
+    updateYTD(item.key);
+  });
+}
+
+function buildTracker(item) {
+  const cells = MONTHS.map((m, mi) => `
+    <div class="tracker-cell">
+      <div class="tracker-month">${m}</div>
+      <input
+        class="tracker-input"
+        type="number"
+        id="tx-${item.key}-${mi}"
+        placeholder="${item.placeholder || '0'}"
+        min="0" step="0.01"
+        oninput="saveTaxMonth('${item.key}', ${mi}, this)"
+      >
+    </div>`).join('');
+
+  return `
+    <div class="tracker-wrap">
+      <div class="tracker-label">
+        <span>Auto-synced from Expense Log — ${TAX.activeYear}</span>
+        <span class="tracker-ytd" id="ytd-${item.key}">YTD: $0.00</span>
+      </div>
+      <div class="tracker-grid">${cells}</div>
+      <div style="margin-top:8px;font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text3)">
+        ↑ Updates automatically when you log expenses. Log expenses in the Expenses tab.
+      </div>
+    </div>`;
+}
+
+function saveTaxMonth(key, monthIndex, inputEl) {
+  const val = parseFloat(inputEl.value) || 0;
+  STORE.setTaxMonth(key, monthIndex, val);
+  inputEl.classList.toggle('has-value', val > 0);
+  updateYTD(key);
+}
+
+function updateYTD(key) {
+  const months = STORE.getTaxMonths(key);
+  const ytd = months.reduce((s, v) => s + (parseFloat(v) || 0), 0);
+  const ytdEl = $('ytd-' + key);
+  const badgeEl = $('ytd-badge-' + key);
+  if (ytdEl) ytdEl.textContent = 'YTD: $' + ytd.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (badgeEl) badgeEl.textContent = 'YTD $' + ytd.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function toggleTax(i) {
+  const body = $('tbody-' + i);
+  const chev = $('chev-' + i);
+  const isOpen = body.classList.toggle('open');
+  chev.classList.toggle('open', isOpen);
+}
+
+/* ── Expense category → tax guide key mapping ── */
+const CAT_TO_TAX_KEY = {
+  'Gas':                    'gas',
+  'Car Maintenance':        'maintenance',
+  'Car Wash':               'maintenance',
+  'Phone & Data':           'phone',
+  'Insurance':              'insurance',
+  'Parking & Tolls':        'parking',
+  'Equipment':              'equipment',
+  'Health Insurance':       'health',
+  'Retirement (SEP-IRA)':   'sepira',
+};
+
+/**
+ * Reads all logged expenses, groups them by tax-guide key + month,
+ * writes the totals into taxTracking, and refreshes all YTD displays.
+ * Called automatically after every addExpense / deleteExpense.
+ * Manual entries in the tracker are REPLACED by the auto-sum so there
+ * is always one source of truth: the expense log.
+ */
+function syncTaxTrackingFromExpenses() {
+  // Reset all tracked keys to zero for active year
+  const tracked = TAX_ITEMS.filter(it => it.tracked);
+  tracked.forEach(item => {
+    STORE.resetTaxMonths(item.key);
+  });
+
+  // Sum only this year's expenses into their key + month bucket
+  STORE.expensesForYear.forEach(e => {
+    const key = CAT_TO_TAX_KEY[e.cat];
+    if (!key) return; // unmapped category (e.g. "Other") — skip
+    const monthIndex = new Date(e.date + 'T00:00:00').getMonth();
+    STORE.setTaxMonth(key, monthIndex, STORE.getTaxMonths(key)[monthIndex] + e.amount);
+  });
+
+  // Refresh the input fields if the tax guide tab is currently rendered
+  tracked.forEach(item => {
+    const months = STORE.getTaxMonths(item.key);
+    months.forEach((val, mi) => {
+      const el = $(`tx-${item.key}-${mi}`);
+      if (el) {
+        el.value = val > 0 ? val.toFixed(2) : '';
+        el.classList.toggle('has-value', val > 0);
+      }
+    });
+    updateYTD(item.key);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   WHAT-IF CALCULATORS
+   ═══════════════════════════════════════════════════════ */
+function runWhatIf() {
+  const income  = parseFloat($('wi-income').value)  || 0;
+  const expense = parseFloat($('wi-expense').value) || 0;
+  const type    = $('wi-type').value;
+  const filing  = $('wi-filing').value;
+
+  const result = $('wi-result');
+  if (!income || !expense) { result.style.display = 'none'; return; }
+  result.style.display = 'block';
+
+  const deductible = type === 'partial' ? expense * 0.65 : expense;
+  const halfSE     = income * TAX.SE_RATE * 0.5;
+  const stdDed     = TAX.STD_DEDUCTION[filing];
+  const taxable    = Math.max(0, income - halfSE - deductible - stdDed);
+  const seTax      = income * TAX.SE_MULTIPLIER * TAX.SE_RATE;
+  const incomeTax  = TAX.calcBracket(taxable);
+  const taxSaved   = expense * TAX.EFFECTIVE_RATE;
+  const realCost   = expense - taxSaved;
+
+  $('wi-r-gross').textContent   = fmtMoney(income);
+  $('wi-r-seded').textContent   = '-' + fmtMoney(halfSE);
+  $('wi-r-expded').textContent  = '-' + fmtMoney(deductible);
+  $('wi-r-taxable').textContent = fmtMoney(taxable);
+  $('wi-r-se').textContent      = fmtMoney(seTax);
+  $('wi-r-it').textContent      = fmtMoney(incomeTax);
+  $('wi-r-realcost').textContent = fmtMoney(realCost);
+  $('wi-r-saved').textContent   = fmtMoney(taxSaved);
+}
+
+function runMileComp() {
+  const miles = parseFloat($('mc-miles').value) || 0;
+  const gas   = parseFloat($('mc-gas').value)   || 0;
+  const maint = parseFloat($('mc-maint').value) || 0;
+  const ins   = parseFloat($('mc-ins').value)   || 0;
+
+  const result = $('mc-result');
+  if (!miles) { result.style.display = 'none'; return; }
+  result.style.display = 'block';
+
+  const standard = miles * TAX.MILEAGE_RATE;
+  const actual   = gas + maint + ins;
+  const isBetter = standard >= actual;
+  const diff     = Math.abs(standard - actual);
+
+  $('mc-r-std').textContent  = fmtMoney(standard);
+  $('mc-r-act').textContent  = fmtMoney(actual);
+  $('mc-r-rec').textContent  = isBetter ? 'Standard Mileage ✓' : 'Actual Expenses ✓';
+  $('mc-r-rec').style.color  = isBetter ? 'var(--lime)' : 'var(--amber)';
+  $('mc-r-diff').textContent = fmtMoney(diff) + ' more in deductions';
+}
+
+function runQuarterly() {
+  const gross = parseFloat($('qe-gross').value) || 0;
+  const ded   = parseFloat($('qe-ded').value)   || 0;
+
+  const result = $('qe-result');
+  if (!gross) { result.style.display = 'none'; return; }
+  result.style.display = 'block';
+
+  const net       = Math.max(0, gross - ded);
+  const seTax     = net * TAX.SE_MULTIPLIER * TAX.SE_RATE;
+  const halfSE    = seTax * 0.5;
+  const taxable   = Math.max(0, net - halfSE - TAX.STD_DEDUCTION.single);
+  const incTax    = TAX.calcBracket(taxable);
+  const annual    = seTax + incTax;
+  const quarterly = annual / 4;
+  const per100    = gross > 0 ? (annual / gross * 100).toFixed(0) : 0;
+
+  $('qe-net').textContent       = fmtMoney(net);
+  $('qe-annual').textContent    = fmtMoney(annual);
+  $('qe-quarterly').textContent = fmtMoney(quarterly);
+  $('qe-per100').textContent    = `$${per100} per $100 earned`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EXPORT
+   ═══════════════════════════════════════════════════════ */
+function renderQDates() {
+  const grid  = $('qdates-grid');
+  const label = $('qdates-label');
+  if (!grid) return;
+  if (label) label.textContent = `Quarterly Deadlines — ${_activeTaxYear}`;
+  const deadlines = TAX.config.QUARTERLY_DEADLINES;
+  const labels = ['Q1','Q2','Q3','Q4'];
+  grid.innerHTML = labels.map((q, i) => `
+    <div style="background:var(--bg2);border-radius:var(--r-sm);padding:12px;border:1px solid var(--border)">
+      <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text3);margin-bottom:4px">${q}</div>
+      <div style="font-weight:700;font-size:0.88rem">${deadlines[i]}</div>
+    </div>`).join('');
+}
+
+function updateExport() {
+  const c = TAX.calculate(STORE.tripsForYear, STORE.expensesForYear);
+  $('ex-gross').textContent = fmtMoney(c.gross);
+  $('ex-ded').textContent   = fmtMoney(c.totalDeductions);
+  $('ex-net').textContent   = fmtMoney(Math.max(0, c.netProfit));
+  $('ex-tax').textContent   = fmtMoney(c.totalTax);
+  renderQDates();
+}
+
+function dlCSV(content, filename) {
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([content], { type: 'text/csv' })),
+    download: filename,
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+function exportFullCSV() {
+  let csv = 'Type,Date,Platform/Category,Amount,Miles,Hours,Notes\n';
+  STORE.tripsForYear.forEach(t =>
+    csv += `Trip,${t.date},${t.platform},${t.earnings},${t.miles},${t.hours},"${t.notes}"\n`
+  );
+  STORE.expensesForYear.forEach(e =>
+    csv += `Expense,${e.date},${e.cat},-${e.amount},,,${e.vendor}\n`
+  );
+  dlCSV(csv, `gigtrack-${_activeTaxYear}-full-report.csv`);
+  toast(`✓ ${_activeTaxYear} full report downloaded`);
+}
+
+function exportExpensesCSV() {
+  let csv = 'Date,Category,Vendor,Amount\n';
+  STORE.expensesForYear.forEach(e => csv += `${e.date},${e.cat},"${e.vendor}",${e.amount}\n`);
+  dlCSV(csv, `gigtrack-${_activeTaxYear}-expenses.csv`);
+  toast(`✓ ${_activeTaxYear} expenses downloaded`);
+}
+
+function exportMileageCSV() {
+  // Use the correct mileage rate for the exported year
+  const rate = _taxConfig(_activeTaxYear).MILEAGE_RATE;
+  let csv = `Date,Platform,Miles,Deduction @ ${(rate*100).toFixed(1)}¢/mile,Notes\n`;
+  STORE.tripsForYear.forEach(t =>
+    csv += `${t.date},${t.platform},${t.miles},${(t.miles * rate).toFixed(2)},"${t.notes}"\n`
+  );
+  dlCSV(csv, `gigtrack-${_activeTaxYear}-mileage-log.csv`);
+  toast(`✓ ${_activeTaxYear} IRS mileage log downloaded`);
+}
+
+function exportJSON() {
+  const backup = {
+    trips:        STORE.trips,
+    expenses:     STORE.expenses,
+    taxTracking:  STORE.taxTracking,
+    screenshots:  STORE.screenshots,
+  };
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })),
+    download: 'gigtrack-backup.json',
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('✓ Full backup saved — includes receipts & tax tracking');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!Array.isArray(parsed.trips) || !Array.isArray(parsed.expenses)) throw new Error('Invalid schema');
+      STORE.replaceAll(parsed);
+      buildYearToggle(); // restored data may span multiple years
+      markGasDirty();
+      renderTrips(); renderExpenses(); renderScreenshots();
+      syncTaxTrackingFromExpenses();
+      updateDashboard();
+      toast('✓ Data restored from backup');
+    } catch {
+      toast('Invalid backup file', true);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   DRAG & DROP for receipt zone
+   ═══════════════════════════════════════════════════════ */
+(function setupDragDrop() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const zone = $('drop-zone');
+    if (!zone) return;
+    ['dragenter','dragover'].forEach(ev => zone.addEventListener(ev, e => {
+      e.preventDefault(); zone.classList.add('drag-over');
+    }));
+    ['dragleave','drop'].forEach(ev => zone.addEventListener(ev, e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+    }));
+    zone.addEventListener('drop', e => {
+      const dt = e.dataTransfer;
+      if (dt && dt.files.length) {
+        $('ss-input').files = dt.files; // not all browsers support this
+        handleUpload({ target: { files: dt.files, value: '' } });
+      }
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const t = today();
+  ['t-date','e-date','ss-date'].forEach(id => { const el = $(id); if (el) el.value = t; });
+
+  // Restore tax year preference.
+  // Default = current calendar year (auto-rolls over on Jan 1 each year).
+  // Only falls back to saved preference if user explicitly chose a year.
+  const currentCalendarYear = new Date().getFullYear();
+  const rawSaved = localStorage.getItem('gigtrack_tax_year');
+  // If saved year matches last year and we've rolled over, clear it
+  const savedYear = (() => {
+    if (!rawSaved) return currentCalendarYear;
+    const saved = parseInt(rawSaved);
+    // If saved year is in the past AND we have no data for it yet, default to current year
+    // (first-time user after Jan 1 should see new year, not last year)
+    const hasDataForSaved = STORE.trips.some(t => yearOf(t.date) === saved) ||
+                            STORE.expenses.some(e => yearOf(e.date) === saved);
+    if (saved < currentCalendarYear && !hasDataForSaved) return currentCalendarYear;
+    return saved;
+  })();
+  buildYearToggle();  // build toggle before setTaxYear so buttons exist
+  setTaxYear(savedYear); // calls buildTaxGuide() internally
+
+  renderTrips();
+  renderDropFeed();
+  renderExpenses();
+  renderScreenshots();
+  syncTaxTrackingFromExpenses();
+  updateDashboard();
+
+  // Re-render charts on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      renderEarningsChart();
+      renderExpenseChart();
+    }, 150);
+  });
+});
+
+/* ═══════════════════════════════════════════════════════
+   PWA — SERVICE WORKER REGISTRATION
+   ═══════════════════════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('[GigTrack] SW registered:', reg.scope))
+      .catch(err => console.warn('[GigTrack] SW failed:', err));
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   ZOOM-TO-RIGHT FIX — iOS Safari restores scroll position
+   on pageshow (bfcache restore). Reset to 0,0 each time.
+   Also resets any viewport scale drift on app reopen.
+   ═══════════════════════════════════════════════════════ */
+window.addEventListener('pageshow', (e) => {
+  // Fires on load AND on back-forward cache restore
+  window.scrollTo(0, 0);
+  document.documentElement.scrollLeft = 0;
+  document.body.scrollLeft = 0;
+});
+
+// Additional iOS standalone zoom-drift fix:
+// When a PWA reopens from the home screen iOS sometimes
+// restores a non-1.0 scale. Force reset via a 0-duration viewport swap.
+(function fixIOSViewportZoom() {
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) return;
+  const vp = document.querySelector('meta[name=viewport]');
+  if (!vp) return;
+  // Momentarily allow scale, then lock it back — forces iOS to reset
+  const original = vp.getAttribute('content');
+  vp.setAttribute('content', original + ', maximum-scale=1.0');
+  // Restore after a frame so iOS picks up the change
+  requestAnimationFrame(() => {
+    vp.setAttribute('content', original);
+  });
+})();
+</script>
+</body>
+</html>
