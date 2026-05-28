@@ -91,6 +91,9 @@
 
   /* Spacing rhythm */
   --gap:   16px;
+
+  /* Header base height — used by header and nav sticky offset */
+  --header-base: 54px;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -105,7 +108,8 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-  min-height: 100vh;
+  min-height: 100vh;         /* fallback for iOS < 15.4 */
+  min-height: 100dvh;        /* dynamic viewport — correct on modern iOS PWA */
   overflow-x: hidden;
 }
 
@@ -123,9 +127,12 @@ body::before {
    ═══════════════════════════════════════════════════════ */
 header {
   position: sticky; top: 0; z-index: 200;
-  height: 54px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 max(20px, env(safe-area-inset-right));
+  /* Height grows to include status bar on iOS standalone */
+  height: calc(var(--header-base) + env(safe-area-inset-top));
+  display: flex; align-items: flex-end; justify-content: space-between;
+  /* Bottom padding keeps content 12px above the bottom edge */
+  padding-bottom: 12px;
+  padding-right: max(20px, env(safe-area-inset-right));
   padding-left: max(20px, env(safe-area-inset-left));
   background: rgba(5,5,8,0.92);
   backdrop-filter: blur(24px);
@@ -171,14 +178,13 @@ header {
   padding: 3px 9px; border-radius: 20px;
   letter-spacing: 0.04em;
 }
-.pill-lime  { background: var(--lime-dim);  color: var(--lime);  border: 1px solid rgba(184,255,0,0.18); }
 .pill-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
 
 /* ═══════════════════════════════════════════════════════
    NAV — 5 items, bottom tab-bar style on mobile
    ═══════════════════════════════════════════════════════ */
 nav {
-  position: sticky; top: 54px; z-index: 190;
+  position: sticky; top: calc(var(--header-base) + env(safe-area-inset-top)); z-index: 190;
   display: flex;
   background: var(--bg1);
   border-bottom: 1px solid var(--border);
@@ -1053,7 +1059,6 @@ tr:hover td { background:rgba(255,255,255,0.012); }
   <div class="logo">Gig<em>Track</em></div>
   <div class="header-right">
     <div class="ty-toggle" id="ty-toggle"></div>
-    <div class="pill pill-lime" id="hdr-tax-year">2026</div>
     <div class="pill pill-amber" id="hdr-net">$0 net</div>
   </div>
 </header>
@@ -2143,9 +2148,7 @@ function setTaxYear(year) {
     b.classList.toggle('active', parseInt(b.dataset.year) === _activeTaxYear);
   });
 
-  // Update header badge — year only, consistent with toggle buttons
-  const badge = $('hdr-tax-year');
-  if (badge) badge.textContent = _activeTaxYear;
+  // hdr-tax-year pill removed — year shown in toggle buttons
 
   // Update the tax guide banner numbers
   const cfg = TAX.config;
