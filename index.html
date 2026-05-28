@@ -21,15 +21,15 @@
 <title>GigTrack — Gig Worker Financial OS</title>
 
 <!-- ── PWA Manifest ── -->
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
 
 <!-- ── Apple touch icons (generated inline via SVG) ── -->
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="152x152" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="167x167" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="167x167" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 
 <!-- ── Fonts ── -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -1812,6 +1812,8 @@ tr:hover td { background:rgba(255,255,255,0.012); }
    APP VERSION — bump this on every deploy to bust cache
    Format: YYYY.MM.DD.build
    ═══════════════════════════════════════════════════════ */
+// ⚠ Keep APP_VERSION in sync with CACHE_VERSION in sw.js.
+// Both must match on every deploy — bump one, bump the other.
 const APP_VERSION = '2026.05.28.1';
 const VERSION_KEY = 'gigtrack_version';
 
@@ -3637,12 +3639,15 @@ function importJSON(event) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   DRAG & DROP for receipt zone
+   INIT — single DOMContentLoaded, all setup consolidated here
    ═══════════════════════════════════════════════════════ */
-(function setupDragDrop() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const zone = $('drop-zone');
-    if (!zone) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const t = today();
+  ['t-date','e-date','ss-date'].forEach(id => { const el = $(id); if (el) el.value = t; });
+
+  // ── Drag & drop for receipt upload zone ──
+  const zone = $('drop-zone');
+  if (zone) {
     ['dragenter','dragover'].forEach(ev => zone.addEventListener(ev, e => {
       e.preventDefault(); zone.classList.add('drag-over');
     }));
@@ -3652,19 +3657,10 @@ function importJSON(event) {
     zone.addEventListener('drop', e => {
       const dt = e.dataTransfer;
       if (dt && dt.files.length) {
-        $('ss-input').files = dt.files; // not all browsers support this
         handleUpload({ target: { files: dt.files, value: '' } });
       }
     });
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  const t = today();
-  ['t-date','e-date','ss-date'].forEach(id => { const el = $(id); if (el) el.value = t; });
+  }
 
   // Restore tax year preference.
   // Default = current calendar year (auto-rolls over on Jan 1 each year).
@@ -3708,39 +3704,42 @@ document.addEventListener('DOMContentLoaded', () => {
    ═══════════════════════════════════════════════════════ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
+    // Use relative path — works on root or GitHub Pages subfolder
+    const swPath = new URL('./sw.js', window.location.href).href;
+    const scopePath = new URL('./', window.location.href).href;
+    navigator.serviceWorker.register(swPath, { scope: scopePath })
       .then(reg => console.log('[GigTrack] SW registered:', reg.scope))
-      .catch(err => console.warn('[GigTrack] SW failed:', err));
+      .catch(err => console.warn('[GigTrack] SW registration failed:', err));
   });
 }
 
 /* ═══════════════════════════════════════════════════════
-   ZOOM-TO-RIGHT FIX — iOS Safari restores scroll position
-   on pageshow (bfcache restore). Reset to 0,0 each time.
-   Also resets any viewport scale drift on app reopen.
+   ZOOM-TO-RIGHT FIX
+   e.persisted === true only on bfcache restore (not normal load).
+   Scroll reset and viewport fix only run when actually needed.
+   fixIOSViewportZoom runs inside pageshow so the DOM is
+   guaranteed ready — no implicit parse-order assumption.
    ═══════════════════════════════════════════════════════ */
 window.addEventListener('pageshow', (e) => {
-  // Fires on load AND on back-forward cache restore
+  // Only act on bfcache restores — not every page load
+  if (!e.persisted) return;
+
+  // Reset any horizontal scroll drift
   window.scrollTo(0, 0);
   document.documentElement.scrollLeft = 0;
   document.body.scrollLeft = 0;
-});
 
-// Additional iOS standalone zoom-drift fix:
-// When a PWA reopens from the home screen iOS sometimes
-// restores a non-1.0 scale. Force reset via a 0-duration viewport swap.
-(function fixIOSViewportZoom() {
-  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) return;
-  const vp = document.querySelector('meta[name=viewport]');
-  if (!vp) return;
-  // Momentarily allow scale, then lock it back — forces iOS to reset
-  const original = vp.getAttribute('content');
-  vp.setAttribute('content', original + ', maximum-scale=1.0');
-  // Restore after a frame so iOS picks up the change
-  requestAnimationFrame(() => {
-    vp.setAttribute('content', original);
-  });
-})();
+  // iOS standalone zoom-drift: momentarily relax then re-lock viewport
+  // to force scale back to 1.0. DOM is ready here — no timing assumption.
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    const vp = document.querySelector('meta[name=viewport]');
+    if (vp) {
+      const original = vp.getAttribute('content');
+      vp.setAttribute('content', original + ', maximum-scale=1.0');
+      requestAnimationFrame(() => vp.setAttribute('content', original));
+    }
+  }
+});
 </script>
 </body>
 </html>
